@@ -168,17 +168,16 @@ public class BeanVeiculo implements Serializable{
 		RequestContext context = RequestContext.getCurrentInstance();
 		boolean sucesso = false;
 
-		if (this.session.validaVeiculo(this.veiculo)) {
-			if (this.session.update(this.veiculo)) {
-				this.reinit();
-				this.carregaVeiculo();
-				sucesso = true;
-				context.addCallbackParam("sucesso", sucesso);
-				this.verificaPlano();
-				Mensagem.send(Mensagem.MSG_UPDATE, Mensagem.INFO);
-				return "";
-			}
+		if (this.session.update(this.veiculo)) {
+			this.reinit();
+			this.carregaVeiculo();
+			sucesso = true;
+			context.addCallbackParam("sucesso", sucesso);
+			this.verificaPlano();
+			Mensagem.send(Mensagem.MSG_UPDATE, Mensagem.INFO);
+			return "";
 		}
+			
 		context.addCallbackParam("sucesso", sucesso);
 		return null;
 

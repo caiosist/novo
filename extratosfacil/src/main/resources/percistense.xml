@@ -3,7 +3,7 @@
 	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
 
-	<persistence-unit name="br.com.eris.portal"
+	<persistence-unit name="br.com.extratosfacil"
 		transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<properties>
@@ -26,8 +26,7 @@
 
 			<!-- Character Encoding -->
 			<property name="hibernate.connection.useUnicode" value="true" />
-			<property name="hibernate.connection.characterEncoding"
-				value="UTF-8" />
+			<property name="hibernate.connection.characterEncoding" value="UTF-8" />
 			<property name="hibernate.connection.lc_ctype" value="NONE" />
 		</properties>
 	</persistence-unit>

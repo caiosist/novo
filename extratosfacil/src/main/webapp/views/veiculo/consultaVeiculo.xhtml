@@ -11,7 +11,6 @@
 	<ui:define name="body">
 		<p:panel id="cVeiculoPanel" style="border: none;">
 
-
 			<h:panelGrid columns="3">
 				<h:outputLabel styleClass="subtitlePages">Veículos</h:outputLabel>
 				<p:commandButton id="cVeiculoNovo" value="Novo"
@@ -21,23 +20,11 @@
 					onclick="PF('dManterVeiculo').show()" />
 			</h:panelGrid>
 
-			<h:panelGrid columns="6" cellpadding="2" style="border: 2px;">
-				<h:outputText value="Código" />
-				<h:outputText value="Modelo" />
+			<h:panelGrid columns="4" cellpadding="2" style="border: 2px;">
 				<h:outputText value="Placa" />
 				<h:outputText value="Categoria" />
 				<h:outputText value="" />
 				<h:outputText value="" />
-
-				<p:inputText id="cVeiculoCodigo" value="#{beanVeiculo.filtro.id}"
-					maxlength="4" onkeypress="return onlyNumbers(event)" size="7">
-					<p:ajax />
-				</p:inputText>
-
-				<p:inputText maxlength="30"
-					value="#{beanVeiculo.filtro.modeloVeiculo}" onkeyup="up(this)">
-					<p:ajax />
-				</p:inputText>
 
 				<p:inputMask onkeyup="up(this)"
 					value="#{beanVeiculo.filtro.placaVeiculo}" maxlength="7">

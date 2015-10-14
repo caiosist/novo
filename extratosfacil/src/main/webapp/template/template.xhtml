@@ -1,0 +1,119 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+	<title><ui:insert name="pageTitle">Extrato Facil</ui:insert></title>
+
+	<style>
+.ui-widget, .ui-widget .ui-widget {
+	font-size: 15px !important;
+}
+
+.ui-state-disabled {
+	opacity: .78 !important;
+}
+
+.subtitlePages {
+	color: #669214;
+	font-size: 24px;
+	font-samily: sans-serif;
+	font-weight: bold;
+	margin-left: 5px;
+}
+
+.bt-download {
+	/* 	cursor: pointer; */
+	height: 60px;
+	width: 246px;
+	background-image: url("resource/images/download-btn-big.png") !important;
+}
+
+.bt-pagar {
+	/* 	cursor: pointer; */
+	height: 52px;
+	width: 212px;
+	background-image: url("resource/images/pagar.png") !important;
+}
+
+.bt-download:hover {
+	background-color: #649112 !important;
+	color: #FFFFFF !important;
+	font-style: normal !important;
+	font-weight: initial !important;
+	font-family: sans-serif !important;
+	font-size: 14px !important;
+}
+
+.hoverButtons:hover {
+	background-color: #6A9A11;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+.ui-button-text {
+	font-style: normal !important;
+	font-weight: initial !important;
+	font-family: sans-serif !important;
+	font-size: 14px !important;
+}
+
+.ui-button-text:hover {
+	/* 	background-color: #649112 !important; */
+	background-color: #6EC54F !important;
+	color: #FFFFFF !important;
+	font-style: normal !important;
+	font-weight: initial !important;
+	font-family: sans-serif !important;
+	font-size: 14px !important;
+}
+
+.ui-selectonemenu-trigger:hover {
+	background-color: #669214 !important;
+}
+
+.ui-selectonemenu-item:hover, .ui-selectonemenu-list-item:hover {
+	background-color: #669214 !important;
+}
+
+.ui-fileupload-choose:hover {
+	background-color: #669214 !important;
+	color: #FFFFFF !important;
+	font-style: normal !important;
+	font-weight: initial !important;
+	font-family: sans-serif !important;
+	font-size: 14px !important;
+}
+
+.vencido {
+	color: red;
+}
+
+.title {
+	font-family: sans-serif;
+	color: #669214; font-size : 22px;
+	font-weight: bold;
+	font-size: 22px;
+}
+</style>
+	<script type="text/javascript" src="resource/js/validateDialog.js"></script>
+	<script type="text/javascript" src="resource/js/validateKeys.js"></script>
+</h:head>
+
+<h:body>
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{beanLogin.isLogado}" />
+	</f:metadata>
+	<h:form id="form" autocomplete="off">
+		<p:growl id="mensagens" showDetail="true" autoUpdate="true"
+			life="10000" closable="true" />
+		<ui:insert name="body">Page Body</ui:insert>
+	</h:form>
+</h:body>
+
+</html>

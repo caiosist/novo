@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+
+	<title><ui:insert name="pageTitle">Extratos Fácil</ui:insert></title>
+
+	<link rel="shortcut icon"
+		href="#{request.contextPath}/resource/images/favicon.ico"
+		type="image/x-icon" />
+
+	<link type="text/css" rel="stylesheet"
+		href="#{request.contextPath}/resource/css/main.css" />
+
+	<script>
+		function gotoLogin() {
+			parent.window.top.location.href = "http://extratosfacil.com.br/login.html";
+		};
+	</script>
+
+</h:head>
+
+<h:body>
+	<h:form>
+		<p:panel style="border: none">
+			<div id="body" align="center">
+				<div align="center">
+
+					<p class="title"
+						style="font-size: 26px !important; color: red !important">Ocorreu
+						um erro! =/</p>
+					<p class="textFonts"
+						style="font-size: 18px !important; color: red !important">Sua
+						sessão expirou ou você acessou uma página inexistente.</p>
+				</div>
+				<br />
+
+				<h:commandLink value="Voltar para página de Login" action="login"
+					target="_parent" />
+			</div>
+		</p:panel>
+	</h:form>
+</h:body>
+</html>

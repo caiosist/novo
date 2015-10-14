@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+
+		<!-- Connection of Configuration <property name="connection.driver_class">org.postgresql.Driver</property> 
+			<property name="connection.url"> jdbc:postgresql://localhost:5432/new</property> 
+			<property name="connection.username">postgres</property> <property name="connection.password">postgres</property> -->
+
+		<!-- Connection of Configuration -->
+		<property name="connection.driver_class">org.postgresql.Driver</property>
+		<property name="connection.url">jdbc:postgresql://localhost/extrato_db</property>
+		<property name="connection.username">extrato</property>
+		<property name="connection.password">eT3xtra5Fcil</property>
+
+		<property name="current_session_context_class">thread</property>
+
+		<!-- Impression of SQL -->
+		<property name="show_sql">false</property>
+		<property name="format_sql">false</property>
+
+		<!-- Dialect -->
+		<property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+		<property name="hbm2ddl.auto">update</property>
+
+		<!-- Mapping Entities -->
+
+		<mapping class="br.com.extratosfacil.entities.Empresa" />
+		<mapping class="br.com.extratosfacil.entities.planilha.PlanilhaUpload" />
+		<mapping class="br.com.extratosfacil.entities.planilha.PlanilhaDownload" />
+		<mapping class="br.com.extratosfacil.entities.Plano" />
+		<mapping class="br.com.extratosfacil.entities.Veiculo" />
+		<mapping class="br.com.extratosfacil.entities.location.Cidade" />
+		<mapping class="br.com.extratosfacil.entities.location.Estado" />
+		<mapping class="br.com.extratosfacil.entities.location.Pais" />
+		<mapping class="br.com.extratosfacil.entities.Compra" />
+
+
+	</session-factory>
+</hibernate-configuration>

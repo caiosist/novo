@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+
+	<title><ui:insert name="pageTitle">Extratos Fácil</ui:insert></title>
+	
+	<link rel="shortcut icon" href="#{request.contextPath}/resource/images/favicon.ico" type="image/x-icon" />
+
+	<link type="text/css" rel="stylesheet"
+		href="#{request.contextPath}/resource/css/bootstrap/theme.css" />
+		
+	<link type="text/css" rel="stylesheet"
+		href="#{request.contextPath}/resource/css/main.css" />		
+
+	<script type="text/javascript" src="resource/js/validateDialog.js"></script>
+	
+	<style>
+	.ui-widget, .ui-widget .ui-widget {
+		font-size: 13px !important;
+	}
+	
+	.ui-state-disabled {
+		opacity: .78 !important;
+	}
+	</style>
+</h:head>
+<h:body>
+	<h:inputHidden value="#{beanEmpresa.recuperar}" />
+	<h:form>
+		<p:messages id="mensagens" showDetail="true" autoUpdate="true" closable="true" />
+		<p:panel style="border: none">
+			<div align="center">
+				<p class="title" style="font-size: 26px !important">Definir nova senha</p>	
+				
+				<h:panelGrid>
+				
+					<p:password placeholder="Nova Senha" styleClass="inputsCadastro" value="#{beanEmpresa.senha}" />
+					
+					<p:password placeholder="Confirmar Senha" styleClass="inputsCadastro" value="#{beanEmpresa.confSenha}" />
+
+					<p:commandButton style="margin: 10px 0 0 125px" value="Alterar Senha"
+						oncomplete="validaSenha(xhr, status, args)"
+						actionListener="#{beanEmpresa.alterarSenha}" />
+				</h:panelGrid>
+					
+			</div>
+		</p:panel>
+	</h:form>
+
+	<p:dialog header="Senha alterada com sucesso!" widgetVar="dAlteraSenha"
+		closable="false" modal="true" dynamic="true" resizable="false">
+		<center>
+			<p:commandButton value="OK" action="#{beanEmpresa.redirecionaLogin}"
+				onclick="PF('dAlteraSenha').hide()" />
+		</center>
+	</p:dialog>
+
+</h:body>
+</html>

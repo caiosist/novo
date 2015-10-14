@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template/template.xhtml">
+	<ui:define name="pageTitle">Gerar Planilha</ui:define>
+	<ui:define name="body">
+		<p:panel id="cClientePanel" style="border: none;">
+			<h:outputLabel styleClass="subtitlePages">Gerar Planilha </h:outputLabel>
+
+			<p:panel style="border: none;">
+				<p:fileUpload onstart="PF('statusDialog').show()"
+					oncomplete="PF('statusDialog').hide()"
+					fileUploadListener="#{beanPlanilhaUpload.fileUploadAction}"
+					mode="advanced" dragDropSupport="false" auto="true"
+					allowTypes="/(\.|\/)(xlsx|xls)$/"
+					invalidFileMessage="Tipo de arquivo inválido!"
+					update="mensagens, gridPlanilha, botaoDownload, valor"
+					label="Selecionar" />
+			</p:panel>
+
+			<br />
+			<p:separator />
+
+			<p:dataTable id="gridPlanilha" value="#{beanPlanilhaUpload.itens}"
+				scrollable="true" scrollHeight="330" var="planilha"
+				emptyMessage="Nenhum registro encontrado!">
+
+				<f:facet name="header">
+           			Dados incorretos no extrato
+       		 	</f:facet>
+
+				<p:column headerText="Placa">
+					<h:outputText value="#{planilha.placa}" />
+				</p:column>
+				<p:column headerText="Data">
+					<h:outputText value="#{planilha.data}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-03:00" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Hora">
+					<h:outputText value="#{planilha.hora}">
+						<f:convertDateTime pattern="HH:mm:ss" timeZone="GMT-03:00" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Concessionária">
+					<h:outputText value="#{planilha.concessionaria}" />
+				</p:column>
+				<p:column headerText="Praça">
+					<h:outputText value="#{planilha.praca}" />
+				</p:column>
+				<p:column headerText="Valor Cobrado">
+					<h:outputText value="#{planilha.valor}">
+						<f:convertNumber pattern="#0.00" currencyCode="BRL" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Valor Correto">
+					<h:outputText value="#{planilha.valorCorreto}">
+						<f:convertNumber pattern="#0.00" currencyCode="BRL" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Valor a ser Restituido">
+					<h:outputText value="#{planilha.valorRestituicao}">
+						<f:convertNumber pattern="#0.00" currencyCode="BRL" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Categoria Cobrada">
+					<h:outputText value="#{planilha.categoria}" />
+				</p:column>
+				<p:column headerText="Categoria Correta">
+					<h:outputText value="#{planilha.categoriaCorreta}" />
+				</p:column>
+				<p:column headerText="Observações">
+					<h:outputText value="#{planilha.obs}" />
+				</p:column>
+			</p:dataTable>
+			<h:panelGrid id="valor" style="float: right;">
+				<h:panelGrid columns="2">
+					<h:outputText value="VALOR TOTAL A SER RESTITUIDO"
+						style="font-weight:bold;" />
+					<p:inputText disabled="true" value="#{beanPlanilhaUpload.total}">
+						<f:convertNumber pattern="#0.00" />
+					</p:inputText>
+				</h:panelGrid>
+			</h:panelGrid>
+
+			<br></br>
+			<br></br>
+			<br></br>
+			<p:separator />
+			<div align="center">
+				<h:panelGrid id="botaoDownload">
+					<h:panelGrid rendered="#{not empty beanPlanilhaUpload.itens}">
+						<h:commandButton styleClass="bt-download">
+							<p:dataExporter type="xls" fileName="Correções_do_Extrato"
+								postProcessor="#{beanPlanilhaUpload.postProcessXLS}"
+								target="gridPlanilha">
+							</p:dataExporter>
+						</h:commandButton>
+					</h:panelGrid>
+				</h:panelGrid>
+			</div>
+		</p:panel>
+
+		<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+			closable="false" resizable="false" showHeader="false">
+			<div align="center">
+				<p:graphicImage value="./resource/images/ajaxloadingbar.gif" />
+				<p style="font-family: sans-serif; color: #669214">Enviando a
+					Planilha. Isso pode levar alguns minutos!</p>
+			</div>
+		</p:dialog>
+	</ui:define>
+</ui:composition>
+
+</html>

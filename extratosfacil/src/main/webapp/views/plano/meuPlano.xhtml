@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template/template.xhtml">
+	<ui:define name="pageTitle">Meu Plano</ui:define>
+	<ui:define name="body">
+		<p:panel style="border: none;">
+			<h:outputLabel styleClass="subtitlePages">Meu Plano </h:outputLabel>
+
+			<p:commandButton value="Alterar Plano" icon="ui-icon-pencil"
+				onclick="PF('dEditarPlano').show()" update=":form:pnPlano" />
+
+			<p:separator />
+
+			<h:panelGrid columns="2" id="gridPlano">
+
+				<h:outputText value="Plano Atual: " />
+				<h:outputText value="#{beanLogin.usuario.plano.nomePlano}" />
+
+				<h:outputText value="Numero de Veiculos: " />
+				<h:outputText
+					value="#{beanLogin.usuario.plano.quantidadeVeiculos}" />
+
+				<h:outputText value="Crédito utilizado R$: "
+					rendered="#{beanLogin.usuario.plano.credito > 0}" />
+				<h:outputText value="#{beanLogin.usuario.plano.credito}"
+					rendered="#{beanLogin.usuario.plano.credito > 0}">
+					<f:convertNumber pattern="#0.00" currencySymbol="R$"
+						currencyCode="BRL" />
+				</h:outputText>
+
+				<h:outputText value="Valor do Plano R$: " />
+				<h:outputText value="#{beanLogin.usuario.plano.valorPlano}">
+					<f:convertNumber pattern="#0.00" currencySymbol="R$"
+						currencyCode="BRL" />
+				</h:outputText>
+
+				<h:outputText value="Status do Plano: " />
+				<h:outputText value="#{beanLogin.usuario.plano.status}"
+					styleClass="#{beanLogin.usuario.status == 'Pendente' ? vencido : null}" />
+
+				<h:outputText value="Vencimento: "
+					rendered="#{beanLogin.usuario.plano.status != 'Aguardando Pagamento'}" />
+				<h:outputText value="#{beanLogin.usuario.plano.vencimento}"
+					styleClass="#{beanLogin.usuario.status == 'Pendente' ? vencido : null}"
+					rendered="#{beanLogin.usuario.plano.status != 'Aguardando Pagamento'}">
+					<f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-03:00" />
+				</h:outputText>
+
+			</h:panelGrid>
+
+			<h:panelGrid id="botaoPagar">
+				<h:panelGrid columns="2"
+					rendered="#{beanLogin.usuario.plano.status != 'Ativo'}">
+					<p:commandButton value="Pagar" icon="ui-icon-check"
+						action="#{beanPlano.pagar}" />
+					<img src="resource/images/pagsegurologo.jpg" height="50px"
+						width="100px" />
+				</h:panelGrid>
+			</h:panelGrid>
+
+			<p:separator />
+		</p:panel>
+
+		<!-- 
+*******************************************************************************
+							DIALOG MANTER Plano
+*******************************************************************************
+-->
+		<p:dialog header="Alterar Plano" widgetVar="dEditarPlano" modal="true"
+			dynamic="true" id="dmPlano" resizable="false">
+			<ui:include src="/views/plano/pManterPlano.xhtml"></ui:include>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>
+</html>

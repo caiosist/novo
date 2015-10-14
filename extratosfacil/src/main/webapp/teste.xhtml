@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+
+	<title>Teste - Extratos Facil</title>
+
+	<link rel="shortcut icon"
+		href="#{request.contextPath}/resource/images/favicon.ico"
+		type="image/x-icon" />
+
+	<style>
+.ui-widget, .ui-widget .ui-widget {
+	font-size: 15px !important;
+}
+
+.ui-state-disabled {
+	opacity: .78 !important;
+}
+</style>
+	<script>
+		(function(i, s, o, g, r, a, m) {
+			i['GoogleAnalyticsObject'] = r;
+			i[r] = i[r] || function() {
+				(i[r].q = i[r].q || []).push(arguments)
+			}, i[r].l = 1 * new Date();
+			a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+			a.async = 1;
+			a.src = g;
+			m.parentNode.insertBefore(a, m)
+		})(window, document, 'script',
+				'//www.google-analytics.com/analytics.js', 'ga');
+
+		ga('create', 'UA-68299648-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+	<script type="text/javascript" src="resource/js/validateDialog.js"></script>
+	<script type="text/javascript" src="resource/js/validateKeys.js"></script>
+</h:head>
+<h:body>
+	<f:view transient="true">
+		<h:form id="form">
+			<img src="#{request.contextPath}/resource/images/logo.png"
+				style="max-height: 80px; max-width: 300px; position: fixed;" />
+
+			<p:growl id="mensagens" showDetail="true" autoUpdate="true"
+				closable="true" />
+
+			<p align="center"
+				style="font-size: 26px; color: #669214; font-family: sans-serif; font-weight: bold">
+				Faça um teste gratuito! =)</p>
+
+			<p:panel style="border: none">
+
+				<p align="left"
+					style="font-size: 18px; color: black; font-weight: bold; font-family: sans-serif; margin-bottom: 10px">
+					Informe aqui um veículo cadastrado no sem parar</p>
+
+				<div style="border: 2px solid #669214; width: 720px; height: 60px">
+					<h:panelGrid columns="3">
+						<h:outputText value="Modelo" />
+						<h:outputText value="Placa" />
+						<h:outputText value="Categoria " />
+
+						<p:inputText value="#{beanTeste.veiculo.modeloVeiculo}"
+							onkeyup="up(this)">
+							<p:ajax />
+						</p:inputText>
+						<p:inputMask mask="aaa9999" required="true"
+							requiredMessage="Informe a placa do veículo!"
+							value="#{beanTeste.veiculo.placaVeiculo}">
+							<p:ajax />
+						</p:inputMask>
+						<p:selectOneMenu value="#{beanTeste.veiculo.categoria}"
+							required="true" requiredMessage="Informe a categoria do veículo!">
+							<f:selectItem itemLabel="Selecione" itemValue="" />
+							<f:selectItems value="#{beanTeste.categorias}" />
+							<p:ajax />
+						</p:selectOneMenu>
+
+					</h:panelGrid>
+				</div>
+			</p:panel>
+
+			<p:panel style="border: none;">
+
+				<p align="left"
+					style="font-size: 18px; color: black; font-weight: bold; font-family: sans-serif; margin-bottom: 10px">
+					Selecione sua planilha de extratos gerada pelo sem parar</p>
+
+				<div style="border: 2px solid #669214; width: 720px; height: 60px">
+					<p:fileUpload fileUploadListener="#{beanTeste.fileUploadAction}"
+						onstart="PF('statusDialog').show()"
+						oncomplete="PF('statusDialog').hide()" mode="advanced"
+						dragDropSupport="false" auto="true"
+						allowTypes="/(\.|\/)(xlsx|xls)$/"
+						invalidFileMessage="Tipo de arquivo inválido!"
+						update="mensagens, gridPlanilha" label="Selecionar" />
+					<p:poll interval="#{session.maxInactiveInterval - 10}" async="true" />
+				</div>
+			</p:panel>
+
+			<br />
+
+			<p align="left"
+				style="font-size: 18px; color: black; font-weight: bold; font-family: sans-serif; margin-bottom: 10px">
+				Visualize abaixo as diferenças encontradas para o veículo informado
+				no extrato selecionado</p>
+
+			<p:separator />
+
+			<h:outputText id="text"
+				style="font-family: sans-serif; color: #669214"
+				value="O veículo informado possui #{beanTeste.erros} passagens incorretas." />
+
+			<br />
+			<p:separator />
+
+			<p:dataTable id="gridPlanilha" value="#{beanTeste.itens}"
+				var="planilha" emptyMessage="Nenhuma passagem incorreta encontrada!">
+
+				<f:facet name="header">
+           			Dados incorretos no extrato
+       		 	</f:facet>
+
+				<p:column headerText="Placa">
+					<h:outputText value="#{planilha.placa}" />
+				</p:column>
+				<p:column headerText="Data">
+					<h:outputText value="#{planilha.data}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-03:00" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Hora">
+					<h:outputText value="#{planilha.hora}">
+						<f:convertDateTime pattern="HH:mm:ss" timeZone="GMT-03:00" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Concessionária">
+					<h:outputText value="#{planilha.concessionaria}" />
+				</p:column>
+				<p:column headerText="Praça">
+					<h:outputText value="#{planilha.praca}" />
+				</p:column>
+				<p:column headerText="Valor Cobrado">
+					<h:outputText value="#{planilha.valor}">
+						<f:convertNumber pattern="#0.00" currencyCode="BRL" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Valor Correto">
+					<h:outputText value="#{planilha.valorCorreto}">
+						<f:convertNumber pattern="#0.00" currencyCode="BRL" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Valor de Restituição">
+					<h:outputText value="#{planilha.valorRestituicao}">
+						<f:convertNumber pattern="#0.00" currencyCode="BRL" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Categoria Cobrada">
+					<h:outputText value="#{planilha.categoria}" />
+				</p:column>
+				<p:column headerText="Categoria Correta">
+					<h:outputText value="#{planilha.categoriaCorreta}" />
+				</p:column>
+				<p:column headerText="Observações">
+					<h:outputText value="#{planilha.obs}" />
+				</p:column>
+			</p:dataTable>
+			<br></br>
+			<p:separator />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false">
+				<div align="center">
+					<p:graphicImage value="./resource/images/ajaxloadingbar.gif" />
+					<p style="font-family: sans-serif; color: #669214">Enviando a
+						Planilha. Isso pode levar alguns minutos!</p>
+				</div>
+			</p:dialog>
+		</h:form>
+	</f:view>
+</h:body>
+</html>

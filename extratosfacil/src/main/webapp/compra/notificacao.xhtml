@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+
+	<title><ui:insert name="pageTitle">Extrato Facil</ui:insert></title>
+
+	<h:body>
+		<h:form>
+			<h:inputHidden value="#{beanPlano.notificacao}" />
+			<p:panel style="border: none">
+				<h2>Caro Cliente, Sua compra foi computada, estamos aguardando
+					a confirmação do pagamento para liberarmos acesso total ao nosso
+					sistema.</h2>
+				<br>
+				<h2>Assim que confirmado o pagamento você receberá um e-mail
+					informando-lhe.</h2>
+			</p:panel>
+		</h:form>
+
+	</h:body>
+</html>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<div id="mainHeader" align="center">
+
+		<img src="./resource/images/logo.png"
+			style="float: left; max-height: 80px; max-width: 300px; margin-left: 35px" />
+
+		<h:panelGrid id="gridLogin" columns="5"
+			style="float: right; margin: 20px 115px 0 0">
+
+			<p:inputText placeholder="Login" id="autenticacao_login"
+				value="#{beanLogin.usuario.login}"
+				style="width: 150px; margin-right: 10px; height: 16px; font-size: 16px">
+				<p:ajax />
+			</p:inputText>
+
+			<p:password placeholder="Senha" id="autenticacao_senha"
+				value="#{beanLogin.usuario.senha}"
+				style="width: 150px; margin-right: 10px; height: 16px; font-size: 16px">
+				<p:ajax />
+			</p:password>
+
+			<p:commandButton id="submit_empresa" value="Entrar" immediate="true"
+				action="#{beanLogin.fazerLogin}" onclick="PF('statusDialog').show()"
+				oncomplete="PF('statusDialog').hide()" update="gridLogin"
+				style="width: 90px; height: 25px; font-size: 13px" />
+
+			<p:commandLink id="reenviarEmail" value="Reenviar e-mail"
+				immediate="true"
+				style="font-size: 12px; color: #669214; position: absolute; margin: 30px 0 0 -405px"
+				onclick="PF('dReenviarEmail').show()" />
+
+			<p:commandLink id="recuperar_senha" value="Esqueceu sua senha?"
+				immediate="true"
+				style="font-size: 12px; color: #669214; position: absolute; margin: 30px 0 0 -250px"
+				onclick="PF('dRecuperarSenha').show()" />
+
+		</h:panelGrid>
+	</div>
+
+</h:body>
+</html>

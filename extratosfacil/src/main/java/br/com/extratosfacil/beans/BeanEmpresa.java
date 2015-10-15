@@ -41,6 +41,10 @@ public class BeanEmpresa implements Serializable {
 	/**
 	 * 
 	 */
+	private boolean confirmar = false;
+	/**
+	 * 
+	 */
 	private SessionEmpresa session = new SessionEmpresa();
 	/**
 	 * 
@@ -51,9 +55,15 @@ public class BeanEmpresa implements Serializable {
 	 */
 	private String senha;
 
+	private List<String> estadosLabel = new ArrayList<String>();
+
+	private List<String> cidadesLabel = new ArrayList<String>();
+
 	private List<Cidade> cidades = new ArrayList<Cidade>();
 
 	private List<Estado> estados = new ArrayList<Estado>();
+
+	private String selecionado = new String();
 
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTOR
@@ -71,8 +81,25 @@ public class BeanEmpresa implements Serializable {
 		return empresa;
 	}
 
+	public boolean isConfirmar() {
+		this.confirmaCadastro();
+		return confirmar;
+	}
+
+	public void setConfirmar(boolean confirmar) {
+		this.confirmar = confirmar;
+	}
+
 	public void setEmpresa(Empresa empresa) {
 		this.empresa = empresa;
+	}
+
+	public String getSelecionado() {
+		return selecionado;
+	}
+
+	public void setSelecionado(String selecionado) {
+		this.selecionado = selecionado;
 	}
 
 	public boolean isPessoaFisica() {
@@ -93,6 +120,22 @@ public class BeanEmpresa implements Serializable {
 
 	public void setConfSenha(String confSenha) {
 		this.confSenha = confSenha;
+	}
+
+	public List<String> getEstadosLabel() {
+		return estadosLabel;
+	}
+
+	public void setEstadosLabel(List<String> estadosLabel) {
+		this.estadosLabel = estadosLabel;
+	}
+
+	public List<String> getCidadesLabel() {
+		return cidadesLabel;
+	}
+
+	public void setCidadesLabel(List<String> cidadesLabel) {
+		this.cidadesLabel = cidadesLabel;
 	}
 
 	public List<Cidade> getCidades() {
@@ -145,6 +188,7 @@ public class BeanEmpresa implements Serializable {
 			return "";
 		}
 		if (this.session.save(this.empresa, this.pessoaFisica)) {
+			this.session.sendEmailConfirmacao(this.empresa);
 			Sessao.redireciona("subscribe.html");
 			return "";
 		}
@@ -158,12 +202,26 @@ public class BeanEmpresa implements Serializable {
 
 	public void carregaEstados() {
 		this.estados = this.session.findEstados(new Estado());
+		for (int i = 0; i < this.estados.size(); i++) {
+			this.estadosLabel.add(this.estados.get(i).getNomeEstado());
+		}
 		this.session.clean();
 	}
 
 	public void carregaCidades() {
-		this.cidades = this.session.findCidades(this.empresa.getCidade()
-				.getEstado());
+		for (int i = 0; i < this.estados.size(); i++) {
+			if (estados.get(i).getNomeEstado().equals(this.selecionado)) {
+				this.empresa.getCidade().setEstado(estados.get(i));
+			}
+		}
+
+		this.cidades.removeAll(cidades);
+		this.cidadesLabel.removeAll(cidadesLabel);
+		this.cidades.addAll(this.session.findCidades(this.empresa.getCidade()
+				.getEstado()));
+		for (int i = 0; i < this.cidades.size(); i++) {
+			this.cidadesLabel.add(this.cidades.get(i).getNomeCidade());
+		}
 		this.session.clean();
 	}
 
@@ -232,4 +290,12 @@ public class BeanEmpresa implements Serializable {
 		return true;
 	}
 
+	public void setCidadeNome() {
+		for (int i = 0; i < cidades.size(); i++) {
+			if (cidades.get(i).getNomeCidade()
+					.equals(this.empresa.getCidade().getNomeCidade())) {
+				this.empresa.setCidade(this.cidades.get(i));
+			}
+		}
+	}
 }

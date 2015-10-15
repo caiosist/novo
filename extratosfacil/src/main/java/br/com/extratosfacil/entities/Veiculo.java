@@ -173,7 +173,7 @@ public class Veiculo implements Serializable {
 	public void clean() {
 		this.id = null;
 		this.categoria = null;
-		this.empresa.clean();
+		this.empresa = null;
 		this.modeloVeiculo = "";
 		this.placaVeiculo = "";
 	}

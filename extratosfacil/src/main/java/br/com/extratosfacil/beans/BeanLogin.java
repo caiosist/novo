@@ -96,7 +96,7 @@ public class BeanLogin implements Serializable {
 		}
 
 		String login = usuario.getLogin();
-		
+
 		this.usuario = session.efetuarLogin(this.usuario);
 
 		if (this.usuario == null) {
@@ -139,5 +139,9 @@ public class BeanLogin implements Serializable {
 		if (usuarioLogado) {
 			Sessao.redireciona("index.html");
 		}
+	}
+
+	public void redirecionaLogin() {
+		Sessao.redireciona("login.html");
 	}
 }

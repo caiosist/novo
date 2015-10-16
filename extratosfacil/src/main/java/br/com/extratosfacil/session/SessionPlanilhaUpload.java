@@ -252,13 +252,18 @@ public class SessionPlanilhaUpload {
 				continue;
 			}
 
+			if (isDataIncorreta(itemPlanilha)) {
+				itensIncorretos.add(this.criaItemDownload(itemPlanilha, temp,
+						false, true));
+			}
+
 			if (isDuplicado(itensPlanilha, itemPlanilha)) {
 				itensIncorretos.add(this.criaItemDownload(itemPlanilha, temp,
-						true));
+						true, false));
 			} else {
 				if (itemPlanilha.getCategoria() > temp.getCategoria()) {
 					itensIncorretos.add(this.criaItemDownload(itemPlanilha,
-							temp, false));
+							temp, false, false));
 				}
 
 			}
@@ -266,6 +271,26 @@ public class SessionPlanilhaUpload {
 
 		return itensIncorretos;
 
+	}
+
+	private boolean isDataIncorreta(ItemPlanilhaUpload itemPlanilha) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+		String x = sdf.format(itemPlanilha.getData());
+		x = x.substring(3, 5);
+		return this.calculaMes(x);
+	}
+
+	private boolean calculaMes(String x) {
+
+		int mesAtual = Integer.valueOf(this.mes) - 1;
+		int mesPassagem = Integer.valueOf(x);
+
+		if (mesPassagem == 0) {
+			mesPassagem = 12;
+		}
+
+		return mesAtual > mesPassagem;
 	}
 
 	private boolean isDuplicado(List<ItemPlanilhaUpload> itensPlanilha,
@@ -296,7 +321,7 @@ public class SessionPlanilhaUpload {
 
 	private ItemPlanilhaDownload criaItemDownload(
 			ItemPlanilhaUpload itemPlanilhaUpload, Veiculo temp,
-			boolean duplicado) {
+			boolean duplicado, boolean dataIncorreta) {
 
 		ItemPlanilhaDownload item = new ItemPlanilhaDownload();
 
@@ -311,14 +336,19 @@ public class SessionPlanilhaUpload {
 		item.setValorCorreto(item.getValor()
 				/ item.formataCategoria(item.getCategoria())
 				* item.formataCategoria(item.getCategoriaCorreta()));
-		if (duplicado) {
+		if (duplicado || dataIncorreta) {
 			item.setValorRestituicao(item.getValor());
 			item.setValorCorreto(0.0);
 		} else {
 			item.setValorRestituicao(item.getValor() - item.getValorCorreto());
 		}
-		item.setObs(duplicado ? "Passagem Duplicada"
-				: "Número de Eixos incorreto");
+		if (!dataIncorreta) {
+
+			item.setObs(duplicado ? "Passagem Duplicada"
+					: "Número de Eixos incorreto");
+		} else {
+			item.setObs("Verificar Data");
+		}
 		return item;
 	}
 

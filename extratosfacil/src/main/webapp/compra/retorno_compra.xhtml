@@ -7,38 +7,41 @@
 
 <h:head>
 
-	<title><ui:insert name="pageTitle">Extrato Facil</ui:insert></title>
+	<title><ui:insert name="pageTitle">Extratos Fácil</ui:insert></title>
+	
+	<link rel="shortcut icon" href="#{request.contextPath}/resource/images/favicon.ico" type="image/x-icon" />
 
 	<link type="text/css" rel="stylesheet"
 		href="#{request.contextPath}/resource/css/bootstrap/theme.css" />
+		
+	<link type="text/css" rel="stylesheet"
+		href="#{request.contextPath}/resource/css/main.css" />		
 
-	<style>
-div #body {
-	background-color: #FFF;
-}
-
-body {
-	background-color: #43a047;
-}
-</style>
 	<script type="text/javascript" src="resource/js/validateDialog.js"></script>
 </h:head>
+
 <h:body>
 	<h:form>
-		<h:inputHidden value="#{beanPlano.retorno}" />
 		<p:panel style="border: none">
-			<div align="center">
-				<h2>Caro Cliente, Sua compra foi computada, estamos aguardando
-					a confirmação do pagamento para liberarmos acesso total ao nosso
-					sistema.</h2>
+			<div id="body" align="center">
+				<div align="center">
+					<p class="title" style="font-size: 28px !important">Compra computada! =)</p>
+					
+					<p class="textFonts" style="font-size: 18px !important">Prezado cliente, sua compra foi computada com sucesso.</p>
 
-				<h2>Assim que confirmado o pagamento você receberá um e-mail
-					informando-lhe.</h2>
-
-				<h2>Obrigado por escolher a Extratos Fácil!</h2>
-
-				<img src="./../resource/images/logo.png"
-					alt="Soluções Inteligentes pra sua frota!" />
+					<p class="textFonts" style="font-size: 18px !important">
+						Estamos aguardando a confirmação do pagamento para liberarmos seu acesso ao nosso sistema, <BR />
+						assim que confirmado, você receberá um e-mail de notificação.
+					</p>	
+					
+					<BR />
+											
+					<p class="title" style="font-size: 24px !important">Obrigado por escolher a Extratos Fácil!</p> 
+				</div>
+				<br />
+				
+				<img src="./../resource/images/logo.png" alt="Soluções confiáveis para sua frota!" 
+					 style="height: 145px; width: 550px" />
 			</div>
 		</p:panel>
 	</h:form>

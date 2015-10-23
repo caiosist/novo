@@ -408,6 +408,8 @@ public class SessionPlano {
 								this.getVencimento(empresa.getPlano()
 										.getPeriodo()));
 						this.update(empresa.getPlano());
+						Sessao.enviarEmailConfirmaCompra(empresa.getEmail(),
+								empresa.getNomeFantasia());
 					} else {
 						this.sendEmailErroReference(transaction.getReference());
 					}

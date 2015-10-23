@@ -1,6 +1,7 @@
 package br.com.extratosfacil.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import br.com.extratosfacil.entities.location.Cidade;
 
@@ -92,6 +95,13 @@ public class Empresa implements Serializable {
 	@ManyToOne
 	private Plano plano;
 
+	/**
+	 * 
+	 */
+	@Column
+	@Temporal(TemporalType.DATE)
+	private Date dataCadastro;
+
 	/*-------------------------------------------------------------------
 	 *				 		     CONSTRUCTORS
 	 *-------------------------------------------------------------------*/
@@ -114,6 +124,14 @@ public class Empresa implements Serializable {
 
 	public String getRazaoSocial() {
 		return razaoSocial;
+	}
+
+	public Date getDataCadastro() {
+		return dataCadastro;
+	}
+
+	public void setDataCadastro(Date dataCadastro) {
+		this.dataCadastro = dataCadastro;
 	}
 
 	public Plano getPlano() {

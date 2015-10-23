@@ -5,8 +5,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -46,6 +52,8 @@ public class SessionPlanilhaUpload {
 
 	public Controller<Veiculo> controllerVeiculo = new Controller<Veiculo>();
 
+	private String dataEmissao = null;
+
 	private String mes = null;
 
 	/*-------------------------------------------------------------------
@@ -66,6 +74,14 @@ public class SessionPlanilhaUpload {
 
 	public String getMes() {
 		return mes;
+	}
+
+	public String getDataEmissao() {
+		return dataEmissao;
+	}
+
+	public void setDataEmissao(String dataEmissao) {
+		this.dataEmissao = dataEmissao;
 	}
 
 	public void setMes(String mes) {
@@ -99,6 +115,10 @@ public class SessionPlanilhaUpload {
 	}
 
 	private List<ItemPlanilhaDownload> lerPlanilha(Object workbook, Object sheet) {
+
+		// if (!validaMesPlanilha(true)) { DESCOMENTAR DEPOIS
+		// return null;
+		// }
 
 		// formatar a data da planilha para o Obj
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -199,11 +219,11 @@ public class SessionPlanilhaUpload {
 
 		}
 
-		return this.makeTheMagic(lista);
+		return this.makeTheMagic(lista, true);
 	}
 
 	public List<ItemPlanilhaDownload> makeTheMagic(
-			List<ItemPlanilhaUpload> itensPlanilha) {
+			List<ItemPlanilhaUpload> itensPlanilha, boolean xls) {
 		// fazemos a comparacao dos veiculos da planilha upload com os
 		// cadastrados
 
@@ -252,7 +272,7 @@ public class SessionPlanilhaUpload {
 				continue;
 			}
 
-			if (isDataIncorreta(itemPlanilha)) {
+			if (isDataIncorreta(itemPlanilha, xls)) {
 				itensIncorretos.add(this.criaItemDownload(itemPlanilha, temp,
 						false, true));
 			}
@@ -273,24 +293,30 @@ public class SessionPlanilhaUpload {
 
 	}
 
-	private boolean isDataIncorreta(ItemPlanilhaUpload itemPlanilha) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	private boolean isDataIncorreta(ItemPlanilhaUpload itemPlanilha, boolean xls) {
 
-		String x = sdf.format(itemPlanilha.getData());
-		x = x.substring(3, 5);
-		return this.calculaMes(x);
-	}
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		// SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-	private boolean calculaMes(String x) {
-
-		int mesAtual = Integer.valueOf(this.mes) - 1;
-		int mesPassagem = Integer.valueOf(x);
-
-		if (mesPassagem == 0) {
-			mesPassagem = 12;
+		if (xls) {
+			dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		}
 
-		return mesAtual > mesPassagem;
+		LocalDate dataExtrato = LocalDate.parse(this.dataEmissao, dtf);
+		LocalDate dataCobranca = itemPlanilha.getData().toInstant()
+				.atZone(ZoneId.systemDefault()).toLocalDate();
+
+		Period p = Period.between(dataCobranca, dataExtrato);
+
+		//numero de dias entre as datas
+		int x = p.getDays() + (p.getMonths() * 30);
+
+		if (x > 53) {
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 
 	private boolean isDuplicado(List<ItemPlanilhaUpload> itensPlanilha,
@@ -426,7 +452,7 @@ public class SessionPlanilhaUpload {
 				while (rowIterator.hasNext()) {
 					Row row = rowIterator.next();
 
-					if (row.getRowNum() < 2) {
+					if (row.getRowNum() < 3) {
 						continue;
 					}
 
@@ -435,10 +461,12 @@ public class SessionPlanilhaUpload {
 
 						Cell cell = cellIterator.next();
 
-						if ((cell.getRowIndex() == 2)
+						if ((cell.getRowIndex() == 3)
 								&& (cell.getColumnIndex() == 1)) {
 							if (Cell.CELL_TYPE_STRING == cell.getCellType()) {
-								mes = cell.getStringCellValue().substring(3, 5);
+								this.mes = cell.getStringCellValue().substring(
+										3, 5);
+								this.dataEmissao = cell.getStringCellValue();
 								break;
 							}
 						}
@@ -478,14 +506,58 @@ public class SessionPlanilhaUpload {
 		SAXReader reader = new SAXReader();
 		try {
 			lista.addAll(reader.parse(path));
-			this.mes = reader.getDataEmissao();
+			this.dataEmissao = reader.getDataEmissao();
+			this.mes = this.dataEmissao.substring(5, 7);
 		} catch (Exception e) {
 
 			e.printStackTrace();
 		}
 
-		return this.makeTheMagic(lista);
+		// if (!this.validaMesPlanilha(false)) { DESCOMENTAR DEPOIS
+		// return null;
+		// }
 
+		return this.makeTheMagic(lista, false);
+
+	}
+
+	private boolean validaMesPlanilha(boolean xls) {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		if (xls) {
+			sdf = new SimpleDateFormat("dd/MM/yyyy");
+		}
+
+		Date mesCadastro = Sessao.getEmpresaSessao().getDataCadastro();
+
+		Calendar c = Calendar.getInstance();
+		c.setTime(mesCadastro);
+		c.add(Calendar.MONTH, -2);
+
+		mesCadastro = c.getTime();
+
+		try {
+			Date mesPlanilha = sdf.parse(this.dataEmissao);
+			if (mesPlanilha.getYear() == mesCadastro.getYear()) {
+				if (mesPlanilha.getMonth() < mesCadastro.getMonth()) {
+					return false;
+				}
+			} else {
+				mesCadastro.setDate(01);
+				mesPlanilha.setDate(01);
+
+				if (mesPlanilha.before(mesCadastro)) {
+					return false;
+				}
+			}
+
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
 	}
 
 	public boolean validaXml(String caminho) {

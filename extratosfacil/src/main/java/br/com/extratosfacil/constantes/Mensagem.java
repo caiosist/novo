@@ -6,6 +6,8 @@ import javax.faces.context.FacesContext;
 
 public class Mensagem {
 
+	public static final String MSG_DATAPLANILHA = "Não é possivel enviar planilhas antigas, caso deseje fazer a conferencia entre em contato por email: contato@extratosfacil.com.br";
+
 	public static String EMAIL_ENVIADO = "E-mail enviado com sucesso!";
 
 	public static String MSG_ACEITO = "Você precisa Aceitar os Termos!";

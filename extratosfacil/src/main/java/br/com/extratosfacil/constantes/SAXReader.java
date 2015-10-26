@@ -115,11 +115,11 @@ public class SAXReader extends DefaultHandler {
 		if (emissao) {
 			if (tag.equalsIgnoreCase("Data")) {
 				this.setDataEmissao(valorAtual.toString().trim()
-						.substring(5, 7));
+						.substring(0, 10));
 				emissao = false;
 			}
 		} else if (tag.equalsIgnoreCase("Data") && !emissao) {
-			if (valorAtual.toString().trim().equalsIgnoreCase("Emissão")) {
+			if (valorAtual.toString().trim().equalsIgnoreCase("Vencimento")) {
 				emissao = true;
 			}
 		}

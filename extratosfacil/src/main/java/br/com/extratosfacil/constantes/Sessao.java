@@ -5,6 +5,9 @@ import java.io.IOException;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.mail.EmailException;
+
+import br.com.extratosfacil.entities.Email;
 import br.com.extratosfacil.entities.Empresa;
 
 public class Sessao {
@@ -35,6 +38,16 @@ public class Sessao {
 		try {
 			externalContext.redirect(page);
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void enviarEmailConfirmaCompra(String email, String nome){
+		
+		try {
+			Email.sendEmail(email, nome, "Pagamento Confirmado", "Seu Pagamento foi confirmado, acesse agora mesmo o sistema Extratos Facil", "http://extratosfacil.com.br");
+		} catch (EmailException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

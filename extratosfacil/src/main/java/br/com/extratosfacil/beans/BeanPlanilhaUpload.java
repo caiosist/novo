@@ -54,7 +54,7 @@ public class BeanPlanilhaUpload implements Serializable {
 
 	private SessionPlanilhaUpload session = new SessionPlanilhaUpload();
 
-	private List<ItemPlanilhaDownload> itens = new ArrayList<ItemPlanilhaDownload>();
+	private List<ItemPlanilhaDownload> itens = null;
 
 	private Double valorTotal = 0.0;
 
@@ -140,19 +140,25 @@ public class BeanPlanilhaUpload implements Serializable {
 			this.planilhaUpload.setPath(caminho);
 			this.planilhaUpload.setData(new Date());
 
-			itens.removeAll(itens);
-
 			Object workbook = this.session.validaPlanilha(caminho, xlsx);
 
 			if (workbook == null) {
 				// workbook = this.session.validaXml(caminho);
 
 				itens = this.session.carregaXml(caminho);
+				if (itens == null) {
+					Mensagem.send(Mensagem.MSG_DATAPLANILHA, Mensagem.ERROR);
+					return;
+				}
 				this.calculaTotal(itens);
 				this.save();
 
 			} else {
 				itens = this.session.carregaPlanilha(workbook);
+				if (itens == null) {
+					Mensagem.send(Mensagem.MSG_DATAPLANILHA, Mensagem.ERROR);
+					return;
+				}
 				this.calculaTotal(itens);
 				this.save();
 			}

@@ -1,5 +1,6 @@
 package br.com.extratosfacil.session;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -32,6 +33,7 @@ public class SessionEmpresa {
 	public boolean save(Empresa empresa, boolean pessoaFisica) {
 		if (this.validaEmpresa(empresa, false, pessoaFisica)) {
 			try {
+				empresa.setDataCadastro(new Date());
 				this.controller.insert(empresa);
 				return true;
 			} catch (Exception e) {

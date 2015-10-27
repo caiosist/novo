@@ -19,7 +19,7 @@
 
 				<h:panelGrid
 					rendered="#{beanLogin.usuario.status == 'Pendente' and beanLogin.usuario.plano != null}">
-					<h:outputText style="color: red; font-size: 28px;"
+					<h:outputText style="color: red; font-size: 28px; font-family: sans-serif"
 						value="*Seu plano está vencido ou aguardando pagamento. Por favor, verifique a guia Meu Plano!" />
 				</h:panelGrid>
 				<p:separator />
@@ -61,25 +61,31 @@
 						value="Dados e valores para a assinatura" />
 				</h:panelGrid>
 
-				<h:panelGrid columns="3" id="gridPlano"
+				<h:panelGrid columns="4" id="gridPlano"
 					rendered="#{beanLogin.usuario.plano == null}">
 
 					<h:outputText value="Nº de Veículos" />
 					<h:outputText value="Desconto R$" />
 					<h:outputText value="Valor Mensal R$" />
+					<h:outputText value="Valor Total R$" />
 
-					<p:inputText value="#{beanPlano.plano.quantidadeVeiculos}"
+					<p:inputText value="#{beanPlano.plano.quantidadeVeiculos}" style="width: 110px"
 						onkeypress="return onlyNumbers(event)">
 						<p:ajax event="change" process="@this" update="gridPlano"
 							listener="#{beanPlano.calculaValor}" />
 					</p:inputText>
 
-					<p:inputText value="#{beanPlano.desconto}" disabled="true">
+					<p:inputText value="#{beanPlano.desconto}" disabled="true" style="width: 110px">
 						<f:convertNumber pattern="#0.00" currencySymbol="R$"
 							currencyCode="BRL" />
 					</p:inputText>
-
-					<p:inputText value="#{beanPlano.valorTotal}" disabled="true">
+					
+					<p:inputText value="#{beanPlano.valorMensal}" disabled="true" style="width: 110px">
+						<f:convertNumber pattern="#0.00" currencySymbol="R$"
+							currencyCode="BRL" />
+					</p:inputText>
+					
+					<p:inputText value="#{beanPlano.valorTotal}" disabled="true" style="width: 110px">
 						<f:convertNumber pattern="#0.00" currencySymbol="R$"
 							currencyCode="BRL" />
 					</p:inputText>
@@ -92,7 +98,7 @@
 
 					<div align="center">
 						<h:outputText value="Planos" styleClass="title"
-							style="margin-left: 160px" />
+							style="margin-left: 180px" />
 					</div>
 
 					<p:selectOneRadio id="periodo" value="#{beanPlano.periodo}">
@@ -109,7 +115,7 @@
 
 				<h:panelGrid rendered="#{beanLogin.usuario.plano == null}">
 					<div align="center">
-						<p:commandButton value="Assinar" action="#{beanPlano.assinar}" />
+						<p:commandButton value="Assinar" action="#{beanPlano.assinar}" style="width: 150px; margin-top: 30px" />
 					</div>
 				</h:panelGrid>
 

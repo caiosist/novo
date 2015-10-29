@@ -254,6 +254,7 @@ public class BeanEmpresa implements Serializable {
 			return false;
 		}
 		this.empresa.setStatus("Pendente");
+		this.session.sendEmailConfirmado(this.empresa);
 		this.update();
 		return true;
 	}

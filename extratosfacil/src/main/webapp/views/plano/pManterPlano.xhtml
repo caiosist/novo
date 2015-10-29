@@ -7,21 +7,54 @@
 
 <p:panel id="pnPlano" style="border: none;">
 
-	<h:panelGrid columns="2">
+	<h:panelGrid columns="4">
 
 		<h:outputText value="Nº de Veículos" />
+		<h:outputText value="Desconto R$" />
+		<h:outputText value="Valor Mensal R$" />
+		<h:outputText value="Valor Total R$" />
 
-		<p:inputText value="#{beanPlano.plano.quantidadeVeiculos}" style="width: 110px"
-			onkeypress="return onlyNumbers(event)" />
-			
+		<p:inputText value="#{beanPlano.plano.quantidadeVeiculos}"
+			style="width: 110px" onkeypress="return onlyNumbers(event)">
+			<p:ajax event="blur" process="@this" update="pnPlano"
+				listener="#{beanPlano.calculaValor}" />
+		</p:inputText>
+
+		<p:inputText value="#{beanPlano.desconto}" disabled="true"
+			style="width: 110px">
+			<f:convertNumber pattern="#0.00" currencySymbol="R$"
+				currencyCode="BRL" />
+		</p:inputText>
+
+		<p:inputText value="#{beanPlano.valorMensal}" disabled="true"
+			style="width: 110px">
+			<f:convertNumber pattern="#0.00" currencySymbol="R$"
+				currencyCode="BRL" />
+		</p:inputText>
+
+		<p:inputText value="#{beanPlano.valorTotal}" disabled="true"
+			style="width: 110px">
+			<f:convertNumber pattern="#0.00" currencySymbol="R$"
+				currencyCode="BRL" />
+		</p:inputText>
+
+
+
+	</h:panelGrid>
+
+	<h:panelGrid columns="2">
 		<h:outputText value="Planos" />
 		<p:selectOneRadio id="periodo" value="#{beanPlano.periodo}">
 			<f:selectItem itemLabel="Mensal" itemValue="1" />
 			<f:selectItem itemLabel="Trimestral (-6%)" itemValue="3" />
 			<f:selectItem itemLabel="Semestral (-10%)" itemValue="6" />
 			<f:selectItem itemLabel="Anual (-13%)" itemValue="12" />
+			<p:ajax event="change" listener="#{beanPlano.aplicaDesconto}"
+				update="pnPlano" process="@this" />
 		</p:selectOneRadio>
 	</h:panelGrid>
+
+
 
 	<div align="center">
 		<h:panelGrid>

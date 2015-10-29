@@ -22,7 +22,7 @@ import br.com.extratosfacil.session.SessionPlano;
 
 @ManagedBean
 @ViewScoped
-public class BeanPlano implements Serializable{
+public class BeanPlano implements Serializable {
 
 	/**
 	 * 
@@ -46,7 +46,7 @@ public class BeanPlano implements Serializable{
 	private Double desconto = (double) 0;
 
 	private Double valorMensal = (double) 0;
-	
+
 	private Double valorTotal = (double) 0;
 
 	private boolean retorno = false;
@@ -101,7 +101,7 @@ public class BeanPlano implements Serializable{
 	public void setDesconto(Double desconto) {
 		this.desconto = desconto;
 	}
-	
+
 	public Double getValorMensal() {
 		return valorMensal;
 	}
@@ -235,7 +235,8 @@ public class BeanPlano implements Serializable{
 	}
 
 	public void aplicaDesconto() {
-		this.desconto = (this.plano.getQuantidadeVeiculos() * 4.99);
+		this.desconto = (this.plano.getQuantidadeVeiculos() * 4.99)
+				* this.periodo;
 		if (this.periodo == 3) {
 			this.desconto = this.desconto * 0.06;
 		} else if (this.periodo == 6) {
@@ -249,12 +250,13 @@ public class BeanPlano implements Serializable{
 	}
 
 	public void calculaValor() {
-		this.valorTotal = this.plano.getQuantidadeVeiculos() * 4.99	* this.periodo;
-		this.valorMensal = this.valorTotal/this.periodo;
-		
+		this.valorTotal = this.plano.getQuantidadeVeiculos() * 4.99
+				* this.periodo;
+		this.valorMensal = this.valorTotal / this.periodo;
+
 		if (desconto > 0) {
 			this.valorTotal = this.valorTotal - this.desconto;
-			this.valorMensal = this.valorTotal/this.periodo; 
+			this.valorMensal = this.valorTotal / this.periodo;
 		}
 	}
 

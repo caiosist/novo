@@ -116,9 +116,9 @@ public class SessionPlanilhaUpload {
 
 	private List<ItemPlanilhaDownload> lerPlanilha(Object workbook, Object sheet) {
 
-		// if (!validaMesPlanilha(true)) { DESCOMENTAR DEPOIS
-		// return null;
-		// }
+		if (!validaMesPlanilha(true)) {
+			return null;
+		}
 
 		// formatar a data da planilha para o Obj
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -308,7 +308,7 @@ public class SessionPlanilhaUpload {
 
 		Period p = Period.between(dataCobranca, dataExtrato);
 
-		//numero de dias entre as datas
+		// numero de dias entre as datas
 		int x = p.getDays() + (p.getMonths() * 30);
 
 		if (x > 53) {
@@ -513,9 +513,9 @@ public class SessionPlanilhaUpload {
 			e.printStackTrace();
 		}
 
-		// if (!this.validaMesPlanilha(false)) { DESCOMENTAR DEPOIS
-		// return null;
-		// }
+		if (!this.validaMesPlanilha(false)) {
+			return null;
+		}
 
 		return this.makeTheMagic(lista, false);
 

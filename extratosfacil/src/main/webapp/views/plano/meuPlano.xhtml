@@ -22,8 +22,7 @@
 				<h:outputText value="#{beanLogin.usuario.plano.nomePlano}" />
 
 				<h:outputText value="Nº de Veículos: " />
-				<h:outputText
-					value="#{beanLogin.usuario.plano.quantidadeVeiculos}" />
+				<h:outputText value="#{beanLogin.usuario.plano.quantidadeVeiculos}" />
 
 				<h:outputText value="Crédito utilizado R$: "
 					rendered="#{beanLogin.usuario.plano.credito > 0}" />
@@ -64,6 +63,10 @@
 			</h:panelGrid>
 
 			<p:separator />
+			<h:panelGrid rendered="#{beanLogin.usuario.plano.status != 'Ativo'}">
+				<p>*Você pode diminuir o número de veículos somente após o
+					vencimento do plano.</p>
+			</h:panelGrid>
 		</p:panel>
 
 		<!-- 

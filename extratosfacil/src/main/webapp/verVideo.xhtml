@@ -7,10 +7,33 @@
 
 <p:panel id="pnVerVideo" style="border: none">
 	<h:panelGrid columns="2" cellpadding="4">
-		<div align="center">
-			<iframe id="verVideo" width="700" height="500" src="https://www.youtube.com/embed/BcHe2bQytvw?autoplay=1" frameborder="0"/>
-		</div>
+
+		<h:panelGrid>
+			<iframe id="verVideo" width="700" height="500"
+				src="https://www.youtube.com/embed/BcHe2bQytvw?autoplay=1"
+				frameborder="0" />
+
+			<div align="center">
+				<h:panelGrid>
+					<h:outputLink href="javascript:;" onClick="toggleVideo('hide');">Fechar Video</h:outputLink>
+				</h:panelGrid>
+			</div>
+		</h:panelGrid>
+
 	</h:panelGrid>
-</p:panel>	
+</p:panel>
+
+<script>
+	function toggleVideo(state) {
+		// if state == 'hide', hide. Else: show video
+		var div = document.getElementById("popupVid");
+		var iframe = div.getElementsByTagName("iframe")[0].contentWindow;
+		div.style.display = state == 'hide' ? 'none' : '';
+		func = state == 'hide' ? 'pauseVideo' : 'playVideo';
+		iframe.postMessage('{"event":"command","func":"' + func
+				+ '","args":""}', '*');
+		PF('dVerVideo').hide();
+	}
+</script>
 
 </html>

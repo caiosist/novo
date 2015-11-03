@@ -354,7 +354,7 @@ public class SessionEmpresa {
 			return new Empresa();
 		}
 		Mensagem.send(Mensagem.MSG_EMAIL_INVALIDO, Mensagem.ERROR);
-		return null;
+		return new Empresa();
 	}
 
 	public Empresa validaConfirmar() {

@@ -7,6 +7,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.primefaces.context.RequestContext;
+
 import br.com.extratosfacil.constantes.Mensagem;
 import br.com.extratosfacil.constantes.Sessao;
 import br.com.extratosfacil.entities.Empresa;
@@ -45,6 +47,10 @@ public class BeanEmpresa implements Serializable {
 	/**
 	 * 
 	 */
+	private boolean recuperar = false;
+	/**
+	 * 
+	 */
 	private SessionEmpresa session = new SessionEmpresa();
 	/**
 	 * 
@@ -79,6 +85,15 @@ public class BeanEmpresa implements Serializable {
 
 	public Empresa getEmpresa() {
 		return empresa;
+	}
+
+	public boolean isRecuperar() {
+		this.validaRecovery();
+		return recuperar;
+	}
+
+	public void setRecuperar(boolean recuperar) {
+		this.recuperar = recuperar;
 	}
 
 	public boolean isConfirmar() {
@@ -273,10 +288,15 @@ public class BeanEmpresa implements Serializable {
 	}
 
 	public void alterarSenha() {
+		RequestContext context = RequestContext.getCurrentInstance();
+		boolean sucesso = false;
 		if (this.senha.equals(this.confSenha)) {
 			this.empresa.setSenha(this.senha);
 			this.update();
+			sucesso = true;
+			context.addCallbackParam("sucesso", sucesso);
 		} else {
+			context.addCallbackParam("sucesso", sucesso);
 			Mensagem.send(Mensagem.MSG_CONF_SENHA, Mensagem.ERROR);
 		}
 	}

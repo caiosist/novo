@@ -1,3 +1,4 @@
+
 package br.com.extratosfacil.constantes;
 
 import java.io.IOException;

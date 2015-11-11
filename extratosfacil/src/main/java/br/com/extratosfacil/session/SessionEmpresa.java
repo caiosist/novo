@@ -398,9 +398,9 @@ public class SessionEmpresa {
 		try {
 			Email.sendEmail(empresa.getEmail(), empresa.getNomeFantasia(),
 					assunto, mensagem, link);
-			Email.sendEmail("contato@extratosfacil.com.br",
-					empresa.getNomeFantasia(), assunto, "Cadastro confirmado",
-					link);
+			Email.sendEmail("suporte@extratosfacil.com.br",
+					empresa.getNomeFantasia(), assunto, "Cadastro da empresa"
+							+ empresa.getNomeFantasia() + "confirmado ", link);
 		} catch (EmailException e) {
 			e.printStackTrace();
 		}

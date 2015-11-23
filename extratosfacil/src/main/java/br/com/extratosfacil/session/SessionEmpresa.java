@@ -391,8 +391,7 @@ public class SessionEmpresa {
 	}
 
 	public void sendEmailConfirmado(Empresa empresa) {
-		String link = "http://www.extratosfacil.com.br"
-				+ this.crip(empresa.getRazaoSocial());
+		String link = "http://www.extratosfacil.com.br";
 		String mensagem = "<p>Cadastro Confirmado. Clique no link para acessar o sistema: </p>";
 		String assunto = "Confirmado - Extratos Fácil";
 		try {

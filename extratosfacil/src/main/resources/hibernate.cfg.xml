@@ -5,39 +5,46 @@
 <hibernate-configuration>
 	<session-factory>
 
-		<!-- Connection of Configuration <property --> 
-		<property name="connection.driver_class">org.postgresql.Driver</property>
-		<property name="connection.url">jdbc:postgresql://localhost:5432/extratosfacil</property>
-		<property name="connection.username">postgres</property>
-		<property name="connection.password">postgresql</property>
-
-
-
-		<!-- Connection of Configuration -->
-
-<!-- 		<property name="connection.driver_class">org.postgresql.Driver</property> -->
-<!-- 		<property name="connection.url">jdbc:postgresql://localhost/extrato_db</property> -->
-<!-- 		<property name="connection.username">extrato</property> -->
-<!-- 		<property name="connection.password">eT3xtra5Fcil</property> -->
-
+		<!-- Connection of Configuration LOCAL -->
 		<property name="connection.driver_class">org.postgresql.Driver</property>
 		<property name="connection.url"> jdbc:postgresql://localhost:5432/new</property>
 		<property name="connection.username">postgres</property>
 		<property name="connection.password">postgres</property>
 
-		<!-- Connection of Configuration <property name="connection.driver_class">org.postgresql.Driver</property> 
-			<property name="connection.url">jdbc:postgresql://localhost/extrato_db</property> 
+		<!-- Connection of Configuration JLASTIC <property name="connection.driver_class">org.postgresql.Driver</property> 
+			<property name="connection.url"> jdbc:postgresql://postgres73544-extratos.jelasticlw.com.br/extratos_db</property> 
+			<property name="connection.username">webadmin</property> <property name="connection.password">APIkeb26886</property> -->
+
+		<!-- Connection of Configuration AMAZON <property name="connection.driver_class">org.postgresql.Driver</property> 
+			<property name="connection.url"> jdbc:postgresql://extratosdb.corx1y8jjrh5.us-west-2.rds.amazonaws.com:5432/extrato_db</property> 
+			<property name="connection.username">exxtrato</property> <property name="connection.password">Extrato*facil</property> -->
+
+		<!-- Connection of Configuration INTEGRATOR <property name="connection.driver_class">org.postgresql.Driver</property> 
+			<property name="connection.url">jdbc:postgresql://localhost/extrato_db?autoReconnect=true</property> 
 			<property name="connection.username">extrato</property> <property name="connection.password">eT3xtra5Fcil</property> -->
 
-		<property name="current_session_context_class">thread</property>
-
-		<!-- Impression of SQL -->
-		<property name="show_sql">true</property>
-		<property name="format_sql">true</property>
 
 		<!-- Dialect -->
 		<property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 		<property name="hbm2ddl.auto">update</property>
+
+		<!-- Impression of SQL -->
+		<property name="show_sql">false</property>
+		<property name="format_sql">false</property>
+
+		<!-- c3p0 config http://www.hibernate.org/214.html -->
+		<property name="connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+		<property name="hibernate.c3p0.acquire_increment">4</property>
+		<property name="hibernate.c3p0.idle_test_period">60</property>
+		<property name="hibernate.c3p0.min_size">1</property>
+		<property name="hibernate.c3p0.max_size">5</property>
+		<property name="hibernate.c3p0.max_statements">100</property>
+		<property name="hibernate.c3p0.timeout">0</property>
+		<property name="hibernate.c3p0.acquireRetryAttempts">1</property>
+		<property name="hibernate.c3p0.acquireRetryDelay">250</property>
+
+		<property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
+		<property name="hibernate.current_session_context_class">thread</property>
 
 		<!-- Mapping Entities -->
 

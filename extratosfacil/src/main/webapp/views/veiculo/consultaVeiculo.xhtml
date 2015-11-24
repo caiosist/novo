@@ -81,6 +81,28 @@
 					value="*Você atingiu o número máximo de veículos, para adicionar novos veículos atualize seu plano!" />
 			</h:panelGrid>
 
+			<h:outputText style="color: red;"
+				value="*Por motivos de segurança você não poderá alterar as placas dos veiculos cadastrados!" />
+
+			<br></br>
+			<br></br>
+			<p:separator />
+			<div align="center">
+				<h:outputText
+					value="Cadastrou alguma placa errada? informe a placa que removemos para você!" />
+
+				<br></br> <br></br>
+
+				<h:panelGrid columns="3">
+					<h:outputText value="Placa" />
+					<p:inputMask mask="aaa9999" value="#{beanVeiculo.placaErrada}" />
+					<p:commandButton value="Eviar e-mail"
+						onclick="PF('statusDialog').show()"
+						oncomplete="PF('statusDialog').hide()"
+						action="#{beanVeiculo.sendEmailPlaca}" />
+				</h:panelGrid>
+			</div>
+
 		</p:panel>
 
 
@@ -92,6 +114,12 @@
 		<p:dialog header="Cadastrar novo veículo" widgetVar="dManterVeiculo"
 			modal="true" dynamic="true" id="dmVeiculo" resizable="false">
 			<ui:include src="/views/veiculo/pManterVeiculo.xhtml"></ui:include>
+		</p:dialog>
+
+
+		<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+			closable="false" resizable="false" showHeader="false">
+			<p:graphicImage value="./resource/images/ajaxloadingbar.gif" />
 		</p:dialog>
 
 	</ui:define>

@@ -2,10 +2,12 @@ package br.com.extratosfacil.session;
 
 import java.util.List;
 
+import org.apache.commons.mail.EmailException;
 import org.hibernate.exception.ConstraintViolationException;
 
 import br.com.extratosfacil.constantes.Mensagem;
 import br.com.extratosfacil.constantes.Sessao;
+import br.com.extratosfacil.entities.Email;
 import br.com.extratosfacil.entities.Empresa;
 import br.com.extratosfacil.entities.Veiculo;
 import br.com.jbc.controller.Controller;
@@ -130,6 +132,26 @@ public class SessionVeiculo {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
+		}
+	}
+
+	public void sendEmailPlaca(String placaErrada) {
+		String destinatario = "suporte@extratosfacil.com.br";
+		String nomeDestinatario = "Extratos Facil";
+		String assunto = "Placa Incorreta";
+		String mensagem = "A placa " + placaErrada
+				+ " Esta cadastrada para empresa "
+				+ Sessao.getEmpresaSessao().getNomeFantasia()
+				+ " incorretamente, favor excluir do sistema.";
+		String link = "extratosfacil.com.br/admin";
+		try {
+			Email.sendEmail(destinatario, nomeDestinatario, assunto, mensagem,
+					link);
+			Mensagem.send(Mensagem.EMAIL_ENVIADO, Mensagem.INFO);
+		} catch (EmailException e) {
+			Mensagem.send("Ocorreu um erro, por favor tente mais tarde!",
+					Mensagem.ERROR);
+			e.printStackTrace();
 		}
 	}
 }

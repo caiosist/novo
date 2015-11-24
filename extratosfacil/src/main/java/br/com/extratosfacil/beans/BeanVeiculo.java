@@ -27,7 +27,7 @@ import br.com.extratosfacil.session.SessionVeiculo;
 
 @ManagedBean
 @ViewScoped
-public class BeanVeiculo implements Serializable{
+public class BeanVeiculo implements Serializable {
 
 	/**
 	 * 
@@ -48,9 +48,15 @@ public class BeanVeiculo implements Serializable{
 
 	private SessionVeiculo session = new SessionVeiculo();
 
-	private List<Integer> categorias = new ArrayList<Integer>();
+	private List<Integer> cat = new ArrayList<Integer>();
+
+	private List<String> categorias = new ArrayList<String>();
 
 	private CommandButton botaoNovo;
+
+	private String placaErrada = "";
+
+	private String categoriaSelecionada = "";
 
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTOR
@@ -82,12 +88,36 @@ public class BeanVeiculo implements Serializable{
 		return this.verificaPlano();
 	}
 
-	public List<Integer> getCategorias() {
+	public String getPlacaErrada() {
+		return placaErrada;
+	}
+
+	public void setPlacaErrada(String placaErrada) {
+		this.placaErrada = placaErrada;
+	}
+
+	public List<Integer> getCat() {
+		return cat;
+	}
+
+	public List<String> getCategorias() {
 		return categorias;
 	}
 
-	public void setCategorias(List<Integer> categorias) {
+	public void setCategorias(List<String> categorias) {
 		this.categorias = categorias;
+	}
+
+	public void setCat(List<Integer> cat) {
+		this.cat = cat;
+	}
+
+	public String getCategoriaSelecionada() {
+		return categoriaSelecionada;
+	}
+
+	public void setCategoriaSelecionada(String categoriaSelecionada) {
+		this.categoriaSelecionada = categoriaSelecionada;
 	}
 
 	public CommandButton getBotaoNovo() {
@@ -146,6 +176,14 @@ public class BeanVeiculo implements Serializable{
 		RequestContext context = RequestContext.getCurrentInstance();
 		boolean sucesso = false;
 
+		int x = categorias.indexOf(categoriaSelecionada);
+
+		try {
+			this.veiculo.setCategoria(this.cat.get(x));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
 		if (this.veiculo.getId() != null) {
 			return this.update();
 		}
@@ -177,7 +215,7 @@ public class BeanVeiculo implements Serializable{
 			Mensagem.send(Mensagem.MSG_UPDATE, Mensagem.INFO);
 			return "";
 		}
-			
+
 		context.addCallbackParam("sucesso", sucesso);
 		return null;
 
@@ -198,17 +236,29 @@ public class BeanVeiculo implements Serializable{
 	}
 
 	private void carragaCategoria() {
-		this.categorias.add(1);
-		this.categorias.add(2);
-		this.categorias.add(3);
-		this.categorias.add(4);
-		this.categorias.add(5);
-		this.categorias.add(6);
-		this.categorias.add(61);
-		this.categorias.add(62);
-		this.categorias.add(63);
-		this.categorias.add(64);
-		this.categorias.add(9);
+		this.cat.add(1);
+		this.cat.add(2);
+		this.cat.add(3);
+		this.cat.add(4);
+		this.cat.add(5);
+		this.cat.add(6);
+		this.cat.add(61);
+		this.cat.add(62);
+		this.cat.add(63);
+		this.cat.add(64);
+		this.cat.add(9);
+
+		this.categorias.add("Carro");
+		this.categorias.add("Caminhão 2 Eixos");
+		this.categorias.add("Caminhão 3 Eixos");
+		this.categorias.add("Caminhão 4 Eixos");
+		this.categorias.add("Caminhão 5 Eixos");
+		this.categorias.add("Caminhão 6 Eixos");
+		this.categorias.add("Caminhão 7 Eixos");
+		this.categorias.add("Caminhão 8 Eixos");
+		this.categorias.add("Caminhão 9 Eixos");
+		this.categorias.add("Caminhão 10 Eixos");
+		this.categorias.add("Moto");
 	}
 
 	private boolean verificaPlano() {
@@ -226,6 +276,23 @@ public class BeanVeiculo implements Serializable{
 		}
 		return false;
 
+	}
+
+	public void sendEmailPlaca() {
+		if (placaErrada == null || placaErrada.equals("")) {
+			Mensagem.send("Informe a Placa", Mensagem.ERROR);
+		} else {
+
+			Veiculo temp = new Veiculo();
+			temp.setPlacaVeiculo(placaErrada.toUpperCase());
+			temp = this.session.find(temp);
+
+			if (temp == null) {
+				Mensagem.send("Placa Informada Não Encontrada!", Mensagem.ERROR);
+			} else {
+				this.session.sendEmailPlaca(placaErrada);
+			}
+		}
 	}
 
 }

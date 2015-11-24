@@ -19,7 +19,7 @@
 			value="#{beanVeiculo.veiculo.placaVeiculo}" maxlength="7" />
 
 		<h:outputText value="Categoria " />
-		<p:selectOneMenu value="#{beanVeiculo.veiculo.categoria}">
+		<p:selectOneMenu value="#{beanVeiculo.categoriaSelecionada}">
 			<f:selectItem itemLabel="Selecione" itemValue="" />
 			<f:selectItems value="#{beanVeiculo.categorias}" />
 		</p:selectOneMenu>

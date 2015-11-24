@@ -391,16 +391,15 @@ public class SessionEmpresa {
 	}
 
 	public void sendEmailConfirmado(Empresa empresa) {
-		String link = "http://www.extratosfacil.com.br"
-				+ this.crip(empresa.getRazaoSocial());
+		String link = "http://www.extratosfacil.com.br";
 		String mensagem = "<p>Cadastro Confirmado. Clique no link para acessar o sistema: </p>";
 		String assunto = "Confirmado - Extratos Fácil";
 		try {
 			Email.sendEmail(empresa.getEmail(), empresa.getNomeFantasia(),
 					assunto, mensagem, link);
-			Email.sendEmail("contato@extratosfacil.com.br",
-					empresa.getNomeFantasia(), assunto, "Cadastro confirmado",
-					link);
+			Email.sendEmail("suporte@extratosfacil.com.br",
+					empresa.getNomeFantasia(), assunto, "Cadastro da empresa"
+							+ empresa.getNomeFantasia() + "confirmado ", link);
 		} catch (EmailException e) {
 			e.printStackTrace();
 		}

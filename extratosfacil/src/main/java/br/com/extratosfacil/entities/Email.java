@@ -4,9 +4,11 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 
 public class Email {
-
+	
 	private static String smtpServer = "mail.extratosfacil.com.br";
 	private static Integer smtpPort = 587;
+//	private static String smtpServer = "email-ssl.com.br";
+//	private static Integer smtpPort = 465;
 	private static String fromEmail = "contato@extratosfacil.com.br";
 	private static String fromName = "Extratos Facil";
 	private static String login = "contato@extratosfacil.com.br";

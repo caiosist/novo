@@ -55,9 +55,9 @@ public class SessionPlanilhaDownload {
 		String realPath = context.getRealPath("/");
 
 		// pega o nome da empresa e a data para criar a pasta da planilha
-		String nomeEmpresa = this.getNomeEmpresa();
+		String cnpjEmpresa = this.getCNPJEmpresa();
 		String data = this.getData();
-		String diretorio = realPath + "Empresas" + File.separator + nomeEmpresa
+		String diretorio = realPath + "Empresas" + File.separator + cnpjEmpresa
 				+ File.separator + "Download" + File.separator + data
 				+ File.separator;
 		// Aqui cria o diretorio caso n�o exista
@@ -140,11 +140,11 @@ public class SessionPlanilhaDownload {
 		return d;
 	}
 
-	private String getNomeEmpresa() {
+	private String getCNPJEmpresa() {
 		// Pega a empresa da sessao para dar nome a pasta da planilha
 		Empresa empresa = Sessao.getEmpresaSessao();
 		if (empresa != null) {
-			return empresa.getRazaoSocial().trim();
+			return empresa.getCnpj().trim();
 		}
 		return "empresa";
 	}

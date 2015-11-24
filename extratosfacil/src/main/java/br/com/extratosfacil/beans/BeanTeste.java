@@ -48,7 +48,11 @@ public class BeanTeste implements Serializable {
 
 	private int erros = 0;
 
-	private List<Integer> categorias = new ArrayList<Integer>();
+	private List<Integer> cat = new ArrayList<Integer>();
+
+	private List<String> categorias = new ArrayList<String>();
+
+	private String categoriaSelecionada = "";
 
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTOR
@@ -70,11 +74,27 @@ public class BeanTeste implements Serializable {
 		this.veiculo = veiculo;
 	}
 
-	public List<Integer> getCategorias() {
+	public String getCategoriaSelecionada() {
+		return categoriaSelecionada;
+	}
+
+	public void setCategoriaSelecionada(String categoriaSelecionada) {
+		this.categoriaSelecionada = categoriaSelecionada;
+	}
+
+	public List<Integer> getCat() {
+		return cat;
+	}
+
+	public void setCat(List<Integer> cat) {
+		this.cat = cat;
+	}
+
+	public List<String> getCategorias() {
 		return categorias;
 	}
 
-	public void setCategorias(List<Integer> categorias) {
+	public void setCategorias(List<String> categorias) {
 		this.categorias = categorias;
 	}
 
@@ -107,6 +127,14 @@ public class BeanTeste implements Serializable {
 	 *-------------------------------------------------------------------*/
 
 	public void fileUploadAction(FileUploadEvent event) {
+
+		int x = categorias.indexOf(categoriaSelecionada);
+
+		try {
+			this.veiculo.setCategoria(this.cat.get(x));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 
 		if ((this.veiculo == null) || (this.veiculo.getPlacaVeiculo() == null)
 				|| (this.veiculo.getCategoria() == null)) {
@@ -173,17 +201,29 @@ public class BeanTeste implements Serializable {
 	}
 
 	private void carragaCategoria() {
-		this.categorias.add(1);
-		this.categorias.add(2);
-		this.categorias.add(3);
-		this.categorias.add(4);
-		this.categorias.add(5);
-		this.categorias.add(6);
-		this.categorias.add(61);
-		this.categorias.add(62);
-		this.categorias.add(63);
-		this.categorias.add(64);
-		this.categorias.add(9);
+		this.cat.add(1);
+		this.cat.add(2);
+		this.cat.add(3);
+		this.cat.add(4);
+		this.cat.add(5);
+		this.cat.add(6);
+		this.cat.add(61);
+		this.cat.add(62);
+		this.cat.add(63);
+		this.cat.add(64);
+		this.cat.add(9);
+
+		this.categorias.add("Carro");
+		this.categorias.add("Caminhão 2 Eixos");
+		this.categorias.add("Caminhão 3 Eixos");
+		this.categorias.add("Caminhão 4 Eixos");
+		this.categorias.add("Caminhão 5 Eixos");
+		this.categorias.add("Caminhão 6 Eixos");
+		this.categorias.add("Caminhão 7 Eixos");
+		this.categorias.add("Caminhão 8 Eixos");
+		this.categorias.add("Caminhão 9 Eixos");
+		this.categorias.add("Caminhão 10 Eixos");
+		this.categorias.add("Moto");
 	}
 
 }

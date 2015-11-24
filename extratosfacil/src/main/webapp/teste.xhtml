@@ -75,7 +75,7 @@
 							value="#{beanTeste.veiculo.placaVeiculo}">
 							<p:ajax />
 						</p:inputMask>
-						<p:selectOneMenu value="#{beanTeste.veiculo.categoria}"
+						<p:selectOneMenu value="#{beanTeste.categoriaSelecionada}"
 							required="true" requiredMessage="Informe a categoria do veículo!">
 							<f:selectItem itemLabel="Selecione" itemValue="" />
 							<f:selectItems value="#{beanTeste.categorias}" />
@@ -99,7 +99,7 @@
 						dragDropSupport="false" auto="true"
 						allowTypes="/(\.|\/)(xlsx|xls)$/"
 						invalidFileMessage="Tipo de arquivo inválido!"
-						update="mensagens, gridPlanilha" label="Selecionar" />
+						update="text, mensagens, gridPlanilha" label="Selecionar" />
 					<p:poll interval="#{session.maxInactiveInterval - 10}" async="true" />
 				</div>
 			</p:panel>

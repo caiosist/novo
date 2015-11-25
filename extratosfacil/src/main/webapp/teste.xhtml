@@ -45,21 +45,25 @@
 	<f:view transient="true">
 		<h:form id="form">
 			<img src="#{request.contextPath}/resource/images/logo.png"
-				style="max-height: 80px; max-width: 300px; position: fixed;" />
+				style="max-height: 80px; max-width: 300px" />
 
 			<p:growl id="mensagens" showDetail="true" autoUpdate="true"
 				closable="true" />
 
 			<p align="center"
-				style="font-size: 26px; color: #669214; font-family: sans-serif; font-weight: bold">
+				style="font-size: 26px; color: #669214; font-family: sans-serif; font-weight: bold; margin-top: -50px">
 				Faça um teste gratuito! =)</p>
-
+				
+			<div style="float: right; width: 450px; height: 270px; margin: 25px 30px 0 0">
+				<iframe width="100%" height="100%" src="https://www.youtube.com/embed/yJ0NPG9FbHg" frameborder="0" />
+			</div>		
+				
 			<p:panel style="border: none">
 
 				<p align="left"
 					style="font-size: 18px; color: black; font-weight: bold; font-family: sans-serif; margin-bottom: 10px">
 					Informe aqui um veículo cadastrado no sem parar</p>
-
+					
 				<div style="border: 2px solid #669214; width: 720px; height: 60px">
 					<h:panelGrid columns="3">
 						<h:outputText value="Modelo" />

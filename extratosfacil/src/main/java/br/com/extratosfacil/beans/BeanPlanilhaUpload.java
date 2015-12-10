@@ -3,7 +3,6 @@ package br.com.extratosfacil.beans;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -76,6 +75,14 @@ public class BeanPlanilhaUpload implements Serializable {
 
 	public SessionPlanilhaUpload getSession() {
 		return session;
+	}
+
+	public Double getValorTotal() {
+		return valorTotal;
+	}
+
+	public void setValorTotal(Double valorTotal) {
+		this.valorTotal = valorTotal;
 	}
 
 	public void setSession(SessionPlanilhaUpload session) {

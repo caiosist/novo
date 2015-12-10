@@ -1,4 +1,3 @@
-
 package br.com.extratosfacil.constantes;
 
 import java.io.IOException;
@@ -66,14 +65,14 @@ public class SAXReader extends DefaultHandler {
 	 * escanear o arquivo XML.
 	 */
 	public void startDocument() {
-		System.out.println("Iniciando a leitura do XML");
+		// System.out.println("Iniciando a leitura do XML");
 	}
 
 	/**
 	 * Indica que o parser achou e fim do documento XML.
 	 */
 	public void endDocument() {
-		System.out.println("Acabou a leitura do XML");
+		// System.out.println("Acabou a leitura do XML");
 	}
 
 	/**
@@ -96,8 +95,8 @@ public class SAXReader extends DefaultHandler {
 				if (atributos.getQName(i).equalsIgnoreCase("ss:Name")) {
 					if (atributos.getValue(i).equalsIgnoreCase(
 							"PASSAGENS PEDÁGIO")) {
-						System.out.println("Achei A sheet correta ==> "
-								+ atributos.getValue(i));
+						// System.out.println("Achei A sheet correta ==> "
+						// + atributos.getValue(i));
 						pedagios = true;
 					}
 				}
@@ -120,14 +119,14 @@ public class SAXReader extends DefaultHandler {
 				emissao = false;
 			}
 		} else if (tag.equalsIgnoreCase("Data") && !emissao) {
-			if (valorAtual.toString().trim().equalsIgnoreCase("Vencimento")) {
+			if (valorAtual.toString().trim().equalsIgnoreCase("Emissão")) {
 				emissao = true;
 			}
 		}
 
 		if (pedagios && tag.equalsIgnoreCase("Row")) {
 			linha += 1;
-			if (linha == 2) {
+			if (linha == 1) {
 				// pedagios = false;
 				veiculos = true;
 			}

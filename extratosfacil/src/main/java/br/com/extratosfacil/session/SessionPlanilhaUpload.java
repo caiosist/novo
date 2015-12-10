@@ -27,6 +27,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import br.com.extratosfacil.constantes.Mensagem;
 import br.com.extratosfacil.constantes.SAXReader;
 import br.com.extratosfacil.constantes.Sessao;
+import br.com.extratosfacil.entities.Empresa;
 import br.com.extratosfacil.entities.Veiculo;
 import br.com.extratosfacil.entities.planilha.ItemPlanilhaDownload;
 import br.com.extratosfacil.entities.planilha.ItemPlanilhaUpload;
@@ -52,9 +53,13 @@ public class SessionPlanilhaUpload {
 
 	public Controller<Veiculo> controllerVeiculo = new Controller<Veiculo>();
 
+	private Controller<ItemPlanilhaUpload> controllerItens = new Controller<ItemPlanilhaUpload>();
+
 	private String dataEmissao = null;
 
 	private String mes = null;
+
+	private boolean verificarPaga = false;
 
 	/*-------------------------------------------------------------------
 	 * 		 					GETTERS AND SETTERS
@@ -78,6 +83,23 @@ public class SessionPlanilhaUpload {
 
 	public String getDataEmissao() {
 		return dataEmissao;
+	}
+
+	public Controller<ItemPlanilhaUpload> getControllerItens() {
+		return controllerItens;
+	}
+
+	public void setControllerItens(
+			Controller<ItemPlanilhaUpload> controllerItens) {
+		this.controllerItens = controllerItens;
+	}
+
+	public boolean isVerificarPaga() {
+		return verificarPaga;
+	}
+
+	public void setVerificarPaga(boolean verificarPaga) {
+		this.verificarPaga = verificarPaga;
 	}
 
 	public void setDataEmissao(String dataEmissao) {
@@ -116,9 +138,9 @@ public class SessionPlanilhaUpload {
 
 	private List<ItemPlanilhaDownload> lerPlanilha(Object workbook, Object sheet) {
 
-		if (!validaMesPlanilha(true)) {
-			return null;
-		}
+		// if (!validaMesPlanilha(true)) {
+		// return null;
+		// }
 
 		// formatar a data da planilha para o Obj
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -229,6 +251,7 @@ public class SessionPlanilhaUpload {
 
 		// Lista de veiculos com cobrancas incorretas
 		List<ItemPlanilhaDownload> itensIncorretos = new ArrayList<ItemPlanilhaDownload>();
+		List<ItemPlanilhaUpload> itensRemovidos = new ArrayList<ItemPlanilhaUpload>();
 
 		// Cria um veiculo temporï¿½rio
 		Veiculo temp = new Veiculo();
@@ -273,23 +296,74 @@ public class SessionPlanilhaUpload {
 			}
 
 			if (isDataIncorreta(itemPlanilha, xls)) {
+				boolean paga = isPassagenPaga(itemPlanilha);
 				itensIncorretos.add(this.criaItemDownload(itemPlanilha, temp,
-						false, true));
+						false, true, paga));
+				if (paga) {
+					itensRemovidos.add(itemPlanilha);
+				}
+
 			}
 
 			if (isDuplicado(itensPlanilha, itemPlanilha)) {
 				itensIncorretos.add(this.criaItemDownload(itemPlanilha, temp,
-						true, false));
+						true, false, false));
+				itensRemovidos.add(itemPlanilha);
 			} else {
 				if (itemPlanilha.getCategoria() > temp.getCategoria()) {
 					itensIncorretos.add(this.criaItemDownload(itemPlanilha,
-							temp, false, false));
+							temp, false, false, false));
 				}
 
 			}
 		}
-
+		this.removeItens(itensRemovidos, itensPlanilha);
+		this.persisteItens(itensPlanilha);
 		return itensIncorretos;
+
+	}
+
+	private void removeItens(List<ItemPlanilhaUpload> itensRemovidos,
+			List<ItemPlanilhaUpload> itensPlanilha) {
+		for (int i = 0; i < itensRemovidos.size(); i++) {
+			int x = itensPlanilha.indexOf(itensRemovidos.get(i));
+			if (x >= 0) {
+				itensPlanilha.remove(x);
+			}
+		}
+
+	}
+
+	private boolean isPassagenPaga(ItemPlanilhaUpload itemIncorreto) {
+
+		if (!this.verificarPaga) {
+			return false;
+		}
+
+		ItemPlanilhaUpload item = null;
+		Empresa empresa = Sessao.getEmpresaSessao();
+
+		String query = "from ItemPlanilhaUpload where placa='"
+				+ itemIncorreto.getPlaca() + "' and empresa_id = "
+				+ empresa.getId() + " and categoria='"
+				+ itemIncorreto.getCategoria() + "' and praca='"
+				+ itemIncorreto.getPraca() + "' and hora='"
+				+ itemIncorreto.getHora() + "' and data='"
+				+ itemIncorreto.getData() + "'";
+
+		try {
+			item = controllerItens.getObjectByHQLCondition(query);
+		} catch (Exception e) {
+			e.printStackTrace();
+			// return true;
+		}
+
+		if (item == null) {
+			return false;
+		} else {
+			itemIncorreto.setDataEmissao(item.getDataEmissao());
+			return true;
+		}
 
 	}
 
@@ -345,9 +419,47 @@ public class SessionPlanilhaUpload {
 		return false;
 	}
 
+	public void persisteItens(List<ItemPlanilhaUpload> itensPlanilha) {
+		Empresa empresa = Sessao.getEmpresaSessao();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date emissao = null;
+
+		// Verifica se existe essa planilha Salva no banco
+		PlanilhaUpload planilha = new PlanilhaUpload();
+
+		try {
+			planilha.setEmissao(sdf.parse(this.dataEmissao));
+			emissao = sdf.parse(this.dataEmissao);
+			planilha.setEmpresa(empresa);
+			planilha = controller.find(planilha);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// Se essa planilha ainda nao existe salva todas as passagens no banco
+		if (planilha == null) {
+			// flag para se a planilha nao existe verifica se tem cobrancas que
+			// ja foram pagas
+			this.verificarPaga = true;
+			for (ItemPlanilhaUpload itemPlanilhaUpload : itensPlanilha) {
+				itemPlanilhaUpload.setEmpresa(empresa);
+				itemPlanilhaUpload.setDataEmissao(emissao);
+			}
+
+			try {
+				this.controllerItens.insert(itensPlanilha);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			this.verificarPaga = false;
+		}
+	}
+
 	private ItemPlanilhaDownload criaItemDownload(
 			ItemPlanilhaUpload itemPlanilhaUpload, Veiculo temp,
-			boolean duplicado, boolean dataIncorreta) {
+			boolean duplicado, boolean dataIncorreta, boolean passagemPaga) {
 
 		ItemPlanilhaDownload item = new ItemPlanilhaDownload();
 
@@ -373,13 +485,43 @@ public class SessionPlanilhaUpload {
 			item.setObs(duplicado ? "Passagem Duplicada"
 					: "Número de Eixos incorreto");
 		} else {
-			item.setObs("Verificar Data");
+			if (passagemPaga) {
+				item.setObs("Passagem já cobrada na fatura de "
+						+ itemPlanilhaUpload.getDataEmissao());
+			} else {
+				item.setObs("Verificar Data");
+			}
+
 		}
 		return item;
 	}
 
 	public boolean validaPlanilha(PlanilhaUpload planilhaUpload) {
+		// formatar a data da planilha para o Obj
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		planilhaUpload.setEmpresa(Sessao.getEmpresaSessao());
+		try {
+			planilhaUpload.setEmissao(sdf.parse(this.dataEmissao));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// Verifica se existe essa planilha Salva no banco
+		PlanilhaUpload planilha = new PlanilhaUpload();
+		planilha.setEmissao(planilhaUpload.getEmissao());
+		planilha.setEmpresa(planilhaUpload.getEmpresa());
+
+		try {
+			planilha = controller.find(planilha);
+			if (planilha != null) {
+				// planilha ja foi salva
+				return false;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return true;
 	}
 
@@ -513,9 +655,9 @@ public class SessionPlanilhaUpload {
 			e.printStackTrace();
 		}
 
-		if (!this.validaMesPlanilha(false)) {
-			return null;
-		}
+		// if (!this.validaMesPlanilha(false)) {
+		// return null;
+		// }
 
 		return this.makeTheMagic(lista, false);
 

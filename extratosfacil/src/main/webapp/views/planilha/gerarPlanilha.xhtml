@@ -26,8 +26,8 @@
 			<p:separator />
 
 			<p:dataTable id="gridPlanilha" value="#{beanPlanilhaUpload.itens}"
-				scrollable="true" scrollHeight="330" var="planilha"
-				emptyMessage="Nenhum registro encontrado!">
+				widgetVar="gridPlanilha" scrollable="true" scrollHeight="330"
+				var="planilha" emptyMessage="Nenhum registro encontrado!">
 
 				<f:facet name="header">
            			Dados incorretos no extrato
@@ -73,7 +73,8 @@
 				<p:column headerText="Categoria Correta">
 					<h:outputText value="#{planilha.categoriaCorreta}" />
 				</p:column>
-				<p:column headerText="Observações">
+				<p:column filterBy="#{planilha.obs}" headerText="Observações"
+					filterMatchMode="contains">
 					<h:outputText value="#{planilha.obs}" />
 				</p:column>
 			</p:dataTable>

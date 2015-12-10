@@ -55,6 +55,14 @@ public class PlanilhaUpload implements Serializable {
 	/**
 	 * 
 	 */
+
+	@Column
+	@Temporal(TemporalType.DATE)
+	private Date emissao;
+
+	/**
+	 * 
+	 */
 	@Column(nullable = false)
 	private String path;
 	/**
@@ -80,6 +88,14 @@ public class PlanilhaUpload implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Date getEmissao() {
+		return emissao;
+	}
+
+	public void setEmissao(Date emissao) {
+		this.emissao = emissao;
 	}
 
 	public Date getData() {

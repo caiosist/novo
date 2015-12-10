@@ -25,7 +25,7 @@ public class Sessao {
 	public static void redireciona(String pagina) {
 		try {
 			FacesContext.getCurrentInstance().getExternalContext()
-					.redirect("/" + pagina);
+					.redirect("/extratosfacil/" + pagina);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

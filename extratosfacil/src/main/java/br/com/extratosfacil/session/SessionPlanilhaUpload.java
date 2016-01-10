@@ -61,6 +61,10 @@ public class SessionPlanilhaUpload {
 
 	private boolean verificarPaga = false;
 
+	private Date dataEmissaoFormatada = null;
+
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
 	/*-------------------------------------------------------------------
 	 * 		 					GETTERS AND SETTERS
 	 *-------------------------------------------------------------------*/
@@ -112,6 +116,20 @@ public class SessionPlanilhaUpload {
 
 	public void setController(Controller<PlanilhaUpload> controller) {
 		this.controller = controller;
+	}
+
+	public Date getEmissaoFormatada() {
+		if (dataEmissaoFormatada == null) {
+			try {
+				return sdf.parse(dataEmissao);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		} else {
+			return dataEmissaoFormatada;
+		}
 	}
 
 	/*-------------------------------------------------------------------
@@ -246,6 +264,7 @@ public class SessionPlanilhaUpload {
 
 	public List<ItemPlanilhaDownload> makeTheMagic(
 			List<ItemPlanilhaUpload> itensPlanilha, boolean xls) {
+
 		// fazemos a comparacao dos veiculos da planilha upload com os
 		// cadastrados
 
@@ -295,14 +314,17 @@ public class SessionPlanilhaUpload {
 				continue;
 			}
 
-			if (isDataIncorreta(itemPlanilha, xls)) {
-				boolean paga = isPassagenPaga(itemPlanilha);
+			if (isPassagenPaga(itemPlanilha)) {
+				itensRemovidos.add(itemPlanilha);
 				itensIncorretos.add(this.criaItemDownload(itemPlanilha, temp,
-						false, true, paga));
-				if (paga) {
-					itensRemovidos.add(itemPlanilha);
-				}
+						false, true, true));
+				continue;
+			}
 
+			if (isDataIncorreta(itemPlanilha, xls)) {
+
+				itensIncorretos.add(this.criaItemDownload(itemPlanilha, temp,
+						false, true, false));
 			}
 
 			if (isDuplicado(itensPlanilha, itemPlanilha)) {
@@ -336,10 +358,6 @@ public class SessionPlanilhaUpload {
 
 	private boolean isPassagenPaga(ItemPlanilhaUpload itemIncorreto) {
 
-		if (!this.verificarPaga) {
-			return false;
-		}
-
 		ItemPlanilhaUpload item = null;
 		Empresa empresa = Sessao.getEmpresaSessao();
 
@@ -354,13 +372,18 @@ public class SessionPlanilhaUpload {
 		try {
 			item = controllerItens.getObjectByHQLCondition(query);
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 			// return true;
 		}
 
 		if (item == null) {
 			return false;
 		} else {
+
+			if (item.getDataEmissao().equals(this.getEmissaoFormatada())) {
+				return false;
+			}
+
 			itemIncorreto.setDataEmissao(item.getDataEmissao());
 			return true;
 		}
@@ -385,7 +408,7 @@ public class SessionPlanilhaUpload {
 		// numero de dias entre as datas
 		int x = p.getDays() + (p.getMonths() * 30);
 
-		if (x > 53) {
+		if (x > 90) {
 			return true;
 		} else {
 			return false;
@@ -422,16 +445,16 @@ public class SessionPlanilhaUpload {
 	public void persisteItens(List<ItemPlanilhaUpload> itensPlanilha) {
 		Empresa empresa = Sessao.getEmpresaSessao();
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date emissao = null;
 
 		// Verifica se existe essa planilha Salva no banco
 		PlanilhaUpload planilha = new PlanilhaUpload();
 
+		planilha.setEmissao(this.getEmissaoFormatada());
+		emissao = this.getEmissaoFormatada();
+		planilha.setEmpresa(empresa);
+
 		try {
-			planilha.setEmissao(sdf.parse(this.dataEmissao));
-			emissao = sdf.parse(this.dataEmissao);
-			planilha.setEmpresa(empresa);
 			planilha = controller.find(planilha);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -439,9 +462,6 @@ public class SessionPlanilhaUpload {
 
 		// Se essa planilha ainda nao existe salva todas as passagens no banco
 		if (planilha == null) {
-			// flag para se a planilha nao existe verifica se tem cobrancas que
-			// ja foram pagas
-			this.verificarPaga = true;
 			for (ItemPlanilhaUpload itemPlanilhaUpload : itensPlanilha) {
 				itemPlanilhaUpload.setEmpresa(empresa);
 				itemPlanilhaUpload.setDataEmissao(emissao);
@@ -452,8 +472,6 @@ public class SessionPlanilhaUpload {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} else {
-			this.verificarPaga = false;
 		}
 	}
 
@@ -497,15 +515,10 @@ public class SessionPlanilhaUpload {
 	}
 
 	public boolean validaPlanilha(PlanilhaUpload planilhaUpload) {
-		// formatar a data da planilha para o Obj
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
 		planilhaUpload.setEmpresa(Sessao.getEmpresaSessao());
-		try {
-			planilhaUpload.setEmissao(sdf.parse(this.dataEmissao));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		planilhaUpload.setEmissao(this.getEmissaoFormatada());
 
 		// Verifica se existe essa planilha Salva no banco
 		PlanilhaUpload planilha = new PlanilhaUpload();
@@ -661,45 +674,6 @@ public class SessionPlanilhaUpload {
 
 		return this.makeTheMagic(lista, false);
 
-	}
-
-	private boolean validaMesPlanilha(boolean xls) {
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-		if (xls) {
-			sdf = new SimpleDateFormat("dd/MM/yyyy");
-		}
-
-		Date mesCadastro = Sessao.getEmpresaSessao().getDataCadastro();
-
-		Calendar c = Calendar.getInstance();
-		c.setTime(mesCadastro);
-		c.add(Calendar.MONTH, -2);
-
-		mesCadastro = c.getTime();
-
-		try {
-			Date mesPlanilha = sdf.parse(this.dataEmissao);
-			if (mesPlanilha.getYear() == mesCadastro.getYear()) {
-				if (mesPlanilha.getMonth() < mesCadastro.getMonth()) {
-					return false;
-				}
-			} else {
-				mesCadastro.setDate(01);
-				mesPlanilha.setDate(01);
-
-				if (mesPlanilha.before(mesCadastro)) {
-					return false;
-				}
-			}
-
-		} catch (ParseException e) {
-			e.printStackTrace();
-			return false;
-		}
-
-		return true;
 	}
 
 	public boolean validaXml(String caminho) {

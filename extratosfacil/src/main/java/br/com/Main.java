@@ -37,8 +37,8 @@ import br.com.jbc.controller.Controller;
 
 public class Main {
 
-	public static String caminho = "D:\\Documentos\\Enterprises\\Extrato Facil\\Correcoes\\Transli\\Extratos\\2015";
-	public static int idEmpresa = 21;
+	public static String caminho = "D:\\Documentos\\Enterprises\\Extrato Facil\\Correcoes\\Brilhante\\Extratos\\2015";
+	public static int idEmpresa = 25;
 
 	public static String dataEmissao;
 	public static String mes = "00";
